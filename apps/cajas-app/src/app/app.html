@@ -1,1 +1,15 @@
+<div
+  class="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-6"
+>
+  <h1 class="text-2xl font-bold text-gray-800">Design System Test</h1>
+
+  <gob-button variant="primary" [loading]="isLoading()" (action)="guardar()">
+    Guardar Cambios
+  </gob-button>
+
+  <gob-button variant="secondary"> Cancelar </gob-button>
+
+  <gob-button variant="ghost"> Ver detalles </gob-button>
+</div>
+
 <router-outlet></router-outlet>
