@@ -1,0 +1,13 @@
+:host {
+  display: inline-block;
+}
+/* Clase auxiliar para centrar el spinner y el texto */
+.gob-loading-content {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre spinner y texto */
+}
+/* Aseguramos que el botón no cambie de tamaño bruscamente */
+.gob-button-base {
+  min-width: 120px;
+}

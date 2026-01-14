@@ -1,0 +1,19 @@
+<mat-form-field appearance="outline" class="w-full gob-input-field">
+  <mat-label>{{ label() }}</mat-label>
+
+  <input
+    matInput
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [value]="value()"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+
+  @if (hint()) {
+  <mat-hint>{{ hint() }}</mat-hint>
+  } @if (hasError) {
+  <mat-error> {{ errorMessage }} </mat-error>
+  }
+</mat-form-field>
