@@ -8,7 +8,20 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        // Tailwind usa las variables CSS generadas por Sass
+        primary: {
+          DEFAULT: 'var(--primary-500)',
+          dark: 'var(--primary-700)',
+        },
+        accent: 'var(--accent-500)',
+        warn: 'var(--warn-500)',
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };
