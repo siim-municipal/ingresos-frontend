@@ -1,5 +1,26 @@
+@use '@angular/material' as mat;
+@use 'libs/ui/components/src/lib/theme/variables' as theme;
+
+// Tailwind Directives
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global styles to this file, and also import other style files */
+// Tipografía Google Fonts (Optimizar en index.html en prod)
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+// Reset y Core de Angular Material
+@include mat.core();
+
+// Aplicar Tema Material
+@include mat.all-component-themes(theme.$gob-theme);
+
+// Exponer variables para Tailwind
+@include theme.expose-theme-to-css();
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-sans);
+}

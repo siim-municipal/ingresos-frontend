@@ -18,8 +18,12 @@
           {
             "glob": "**/*",
             "input": "apps/cajas-app/public"
-          }
+          },
+          "apps/cajas-app/src/assets"
         ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["."]
+        },
         "styles": ["apps/cajas-app/src/styles.scss"]
       },
       "configurations": {

@@ -1,0 +1,64 @@
+@use '@angular/material' as mat;
+
+// 1. Definición de Paleta Institucional (Gobierno)
+$gob-primary-palette: (
+  50: #e3f2fd,
+  100: #bbdefb,
+  200: #90caf9,
+  300: #64b5f6,
+  400: #42a5f5,
+  500: #2196f3,
+  // Color Base
+  600: #1e88e5,
+  700: #1976d2,
+  800: #1565c0,
+  900: #0d47a1,
+  contrast: (
+    50: rgba(black, 0.87),
+    500: white,
+    900: white,
+  ),
+);
+
+$gob-accent-palette: (
+  50: #fff8e1,
+  500: #ffc107,
+  900: #ff6f00,
+  contrast: (
+    500: rgba(black, 0.87),
+  ),
+);
+
+// 2. Crear Paletas Material
+$my-primary: mat.m2-define-palette($gob-primary-palette);
+$my-accent: mat.m2-define-palette($gob-accent-palette, 500, 50, 900);
+$my-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+// 3. Crear Tema
+$gob-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+      warn: $my-warn,
+    ),
+    typography: mat.m2-define-typography-config(
+        $font-family: '"Roboto", "Helvetica Neue", sans-serif',
+      ),
+    density: 0,
+  )
+);
+
+// 4. Mixin para exponer variables CSS al Root (Puente para Tailwind)
+@mixin expose-theme-to-css() {
+  :root {
+    // Extraemos valores clave para Tailwind
+    --primary-500: #{mat.m2-get-color-from-palette($my-primary, 500)};
+    --primary-700: #{mat.m2-get-color-from-palette($my-primary, 700)};
+    --accent-500: #{mat.m2-get-color-from-palette($my-accent, 500)};
+    --warn-500: #{mat.m2-get-color-from-palette($my-warn, 500)};
+
+    // Fuentes
+    --font-sans: 'Roboto', sans-serif;
+  }
+}
