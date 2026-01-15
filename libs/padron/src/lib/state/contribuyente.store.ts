@@ -48,6 +48,7 @@ export class ContribuyenteStore {
   readonly totalElements = computed(() => this.state().totalElements);
   readonly page = computed(() => this.state().page);
   readonly error = computed(() => this.state().error);
+  readonly filter = computed(() => this.state().filter);
 
   readonly selectedContribuyente = computed(() => {
     const s = this.state();
@@ -104,6 +105,37 @@ export class ContribuyenteStore {
           this.feedback.error(msg);
         },
       });
+  }
+
+  /**
+   * Actualiza el estado con resultados obtenidos externamente (ej. desde un switchMap)
+   */
+  setSearchResults(
+    entities: Contribuyente[],
+    total: number,
+    filter: string,
+  ): void {
+    this.state.update((s) => ({
+      ...s,
+      entities,
+      totalElements: total,
+      filter,
+      loading: false,
+      error: null,
+    }));
+  }
+
+  setLoading(isLoading: boolean): void {
+    this.state.update((s) => ({ ...s, loading: isLoading, error: null }));
+  }
+
+  setError(msg: string): void {
+    this.state.update((s) => ({
+      ...s,
+      loading: false,
+      error: msg,
+      entities: [],
+    }));
   }
 
   // Métodos para el Paginador UI

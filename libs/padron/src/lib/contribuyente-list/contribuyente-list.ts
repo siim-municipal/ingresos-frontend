@@ -1,12 +1,19 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContribuyenteStore } from '../state/contribuyente.store';
+import { ContribuyenteSearch } from '../contribuyente-search/contribuyente-search';
+import { ContribuyenteDetail } from '../contribuyente-detail/contribuyente-detail';
 
 @Component({
   selector: 'lib-contribuyente-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ContribuyenteSearch,
+    ContribuyenteDetail,
+  ],
   templateUrl: './contribuyente-list.html',
   styles: [],
 })
@@ -14,19 +21,12 @@ export class ContribuyenteList {
   // Inyectamos el Store
   readonly store = inject(ContribuyenteStore);
 
-  // Signal local para el input de búsqueda
-  searchQuery = signal('');
-
   constructor() {
     this.store.loadContribuyentes('');
   }
 
-  buscar(): void {
-    this.store.loadContribuyentes(this.searchQuery());
-  }
-
-  limpiar(): void {
-    this.searchQuery.set('');
-    this.store.loadContribuyentes('');
+  onEdit(id: string): void {
+    console.log('Navegar a edición:', id);
+    // router.navigate(['/padron/editar', id]);
   }
 }

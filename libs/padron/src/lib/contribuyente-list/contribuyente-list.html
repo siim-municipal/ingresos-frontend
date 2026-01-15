@@ -1,50 +1,31 @@
-<div class="p-6 bg-white rounded-lg shadow-sm border border-slate-200">
-  <h2 class="text-xl font-bold text-slate-800 mb-4">
-    Padrón de Contribuyentes
-  </h2>
+<div
+  class="p-6 bg-white rounded-lg shadow-sm border border-slate-200 min-h-[600px]"
+>
+  <div class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-2">
+      Padrón de Contribuyentes
+    </h2>
+    <p class="text-slate-500 text-sm">
+      Busca y selecciona un contribuyente para ver su detalle.
+    </p>
+  </div>
 
-  <div class="flex gap-3 mb-6">
-    <div class="relative flex-1">
-      <span
-        class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"
-      >
-        <span class="material-icons text-sm">search</span>
-      </span>
-      <input
-        type="text"
-        [ngModel]="searchQuery()"
-        (ngModelChange)="searchQuery.set($event)"
-        (keyup.enter)="buscar()"
-        placeholder="Buscar por RFC, Nombre o Razón Social..."
-        class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-      />
-    </div>
-
-    <button
-      (click)="buscar()"
-      class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium text-sm transition-colors flex items-center gap-2"
-      [disabled]="store.loading()"
-    >
-      @if (store.loading()) {
-      <span
-        class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"
-      ></span>
-      } Buscar
-    </button>
+  <div class="mb-6 relative z-20">
+    <lib-contribuyente-search></lib-contribuyente-search>
   </div>
 
   @if (store.error()) {
   <div
-    class="bg-red-50 text-red-700 p-4 rounded-md mb-4 flex items-center gap-2 text-sm"
+    class="bg-red-50 text-red-700 p-4 rounded-md mb-4 flex items-center gap-2 text-sm border border-red-200"
   >
     <span class="material-icons text-base">error_outline</span>
     {{ store.error() }}
   </div>
   }
 
-  <div class="overflow-x-auto border border-slate-200 rounded-lg">
+  <div class="overflow-hidden border border-slate-200 rounded-lg relative z-10">
     <table class="w-full text-sm text-left">
-      <thead class="bg-slate-50 text-slate-500 font-medium uppercase text-xs">
+      <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
         <tr>
           <th class="px-4 py-3">RFC</th>
           <th class="px-4 py-3">Contribuyente</th>
@@ -52,41 +33,62 @@
           <th class="px-4 py-3 text-right">Acciones</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100">
-        @if (store.contribuyentes().length === 0 && !store.loading()) {
+      <tbody class="divide-y divide-slate-100 bg-white">
+        @if (store.loading()) {
         <tr>
-          <td colspan="4" class="px-4 py-8 text-center text-slate-400">
-            No se encontraron contribuyentes
+          <td colspan="4" class="px-4 py-12 text-center text-slate-400">
+            <div class="flex flex-col items-center justify-center gap-2">
+              <span
+                class="animate-spin h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full"
+              ></span>
+              <span class="text-xs">Actualizando lista...</span>
+            </div>
+          </td>
+        </tr>
+        } @if (store.contribuyentes().length === 0 && !store.loading()) {
+        <tr>
+          <td
+            colspan="4"
+            class="px-4 py-16 text-center text-slate-400 flex flex-col items-center"
+          >
+            <span class="material-icons text-4xl mb-2 opacity-20"
+              >table_view</span
+            >
+            <span>Usa el buscador para cargar datos</span>
           </td>
         </tr>
         } @for (c of store.contribuyentes(); track c.id) {
         <tr
-          class="hover:bg-slate-50 transition-colors cursor-pointer"
+          class="hover:bg-slate-50 transition-colors cursor-pointer group"
           [class.bg-blue-50]="store.selectedContribuyente()?.id === c.id"
           (click)="store.selectContribuyente(c.id)"
         >
           <td class="px-4 py-3 font-mono text-slate-600">{{ c.rfc }}</td>
           <td class="px-4 py-3 font-medium text-slate-800">
             {{ c.nombreCompleto }} @if (c.datosAdicionales.curp) {
-            <div class="text-xs text-slate-400 font-normal mt-0.5">
+            <div class="text-[10px] text-slate-400 font-normal mt-0.5">
               CURP: {{ c.datosAdicionales.curp }}
             </div>
             }
           </td>
           <td class="px-4 py-3">
             <span
-              class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide"
-              [class.bg-purple-100]="c.tipoPersona === 'FISICA'"
+              class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border"
+              [class.bg-purple-50]="c.tipoPersona === 'FISICA'"
               [class.text-purple-700]="c.tipoPersona === 'FISICA'"
-              [class.bg-emerald-100]="c.tipoPersona === 'MORAL'"
+              [class.border-purple-200]="c.tipoPersona === 'FISICA'"
+              [class.bg-emerald-50]="c.tipoPersona === 'MORAL'"
               [class.text-emerald-700]="c.tipoPersona === 'MORAL'"
+              [class.border-emerald-200]="c.tipoPersona === 'MORAL'"
             >
               {{ c.tipoPersona }}
             </span>
           </td>
           <td class="px-4 py-3 text-right">
-            <button class="text-slate-400 hover:text-blue-600">
-              <span class="material-icons text-lg">visibility</span>
+            <button
+              class="text-slate-300 group-hover:text-blue-600 transition-colors"
+            >
+              <span class="material-icons text-lg">chevron_right</span>
             </button>
           </td>
         </tr>
@@ -96,126 +98,10 @@
   </div>
 
   @if (store.selectedContribuyente(); as selected) {
-  <div
-    class="mt-6 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white animate-fade-in-up"
-  >
-    <div
-      class="px-6 py-4 border-b border-slate-100 flex justify-between items-center"
-      [class.bg-purple-50]="selected.tipoPersona === 'FISICA'"
-      [class.bg-emerald-50]="selected.tipoPersona === 'MORAL'"
-    >
-      <div>
-        <h3 class="text-lg font-bold text-slate-800">
-          {{ selected.nombreCompleto }}
-        </h3>
-        <p class="text-xs font-mono text-slate-500 mt-1">
-          RFC: {{ selected.rfc }}
-        </p>
-      </div>
-
-      <span
-        class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border"
-        [class.bg-white]="true"
-        [class.text-purple-700]="selected.tipoPersona === 'FISICA'"
-        [class.border-purple-200]="selected.tipoPersona === 'FISICA'"
-        [class.text-emerald-700]="selected.tipoPersona === 'MORAL'"
-        [class.border-emerald-200]="selected.tipoPersona === 'MORAL'"
-      >
-        {{ selected.tipoPersona }}
-      </span>
-    </div>
-
-    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="space-y-4">
-        <div>
-          <span
-            class="text-[10px] uppercase tracking-wide text-slate-400 font-bold"
-            >Registro</span
-          >
-          <p class="text-sm text-slate-700">
-            {{ selected.fechaRegistro | date:'mediumDate' }}
-          </p>
-        </div>
-
-        <div>
-          <span
-            class="text-[10px] uppercase tracking-wide text-slate-400 font-bold"
-            >Correo</span
-          >
-          <p class="text-sm text-slate-700">
-            {{ selected.datosAdicionales.email }}
-          </p>
-        </div>
-
-        <div>
-          <span
-            class="text-[10px] uppercase tracking-wide text-slate-400 font-bold"
-            >Telefono</span
-          >
-          <p class="text-sm text-slate-700">
-            {{ selected.datosAdicionales.telefono }}
-          </p>
-        </div>
-
-        @if (selected.tipoPersona === 'FISICA' &&
-        selected.datosAdicionales.curp) {
-        <div>
-          <span
-            class="text-[10px] uppercase tracking-wide text-slate-400 font-bold"
-            >CURP</span
-          >
-          <p class="text-sm text-slate-700 font-mono">
-            {{ selected.datosAdicionales.curp }}
-          </p>
-        </div>
-        } @if (selected.tipoPersona === 'MORAL' &&
-        selected.datosAdicionales.fechaConstitucion) {
-        <div>
-          <span
-            class="text-[10px] uppercase tracking-wide text-slate-400 font-bold"
-            >Fecha Constitución</span
-          >
-          <p class="text-sm text-slate-700">
-            {{ selected.datosAdicionales.fechaConstitucion | date:'mediumDate'
-            }}
-          </p>
-        </div>
-        }
-      </div>
-
-      <div>
-        <span
-          class="text-[10px] uppercase tracking-wide text-slate-400 font-bold mb-1 block"
-          >Domicilio Fiscal</span
-        >
-        <div
-          class="bg-slate-50 p-3 rounded-lg border border-slate-100 text-sm text-slate-600"
-        >
-          <p class="font-medium text-slate-800">
-            {{ selected.domicilio.calle | uppercase}} {{
-            selected.domicilio.numeroExterior }}
-          </p>
-          <p>{{ selected.domicilio.colonia }}</p>
-          <!-- <p>C.P. {{ selected.domicilio.codigoPostal }}</p> -->
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-end gap-3"
-    >
-      <button
-        (click)="store.clearSelection()"
-        class="text-slate-500 hover:text-slate-700 text-sm font-medium px-3 py-2"
-      >
-        Cerrar
-      </button>
-      <button
-        class="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-      >
-        Editar Contribuyente
-      </button>
-    </div>
-  </div>
+  <lib-contribuyente-detail
+    [contribuyente]="selected"
+    (closeAction)="store.clearSelection()"
+    (editAction)="onEdit($event)"
+  ></lib-contribuyente-detail>
   }
 </div>
