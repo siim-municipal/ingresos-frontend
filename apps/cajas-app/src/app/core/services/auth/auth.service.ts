@@ -4,7 +4,7 @@ import { OAuthService, OAuthEvent } from 'angular-oauth2-oidc';
 import { jwtDecode } from 'jwt-decode';
 import { authConfig } from './auth.config';
 import { UserProfile } from '@gob-ui/shared/interfaces';
-import { FeedbackService } from '../feedback.service';
+import { FeedbackService } from '@gob-ui/shared/services';
 
 @Injectable({
   providedIn: 'root',

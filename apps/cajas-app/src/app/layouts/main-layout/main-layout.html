@@ -105,6 +105,17 @@
 
         <mat-divider class="my-2"></mat-divider>
 
+        <button
+          mat-list-item
+          *gobHasRole="['CAJERO', 'TESORERO']"
+          routerLink="/padron"
+        >
+          <mat-icon matListItemIcon class="text-slate-500">person</mat-icon>
+          <span>Padrones</span>
+        </button>
+
+        <mat-divider class="my-2"></mat-divider>
+
         <button mat-list-item *gobHasRole="['ADMIN']" routerLink="/ingresos">
           <mat-icon matListItemIcon class="text-slate-500">settings</mat-icon>
           <span>Configuración Avanzada</span>

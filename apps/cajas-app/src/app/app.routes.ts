@@ -31,6 +31,11 @@ export const appRoutes: Route[] = [
         component: GobButtonComponent,
       },
       {
+        path: 'padron',
+        loadComponent: () =>
+          import('@gob-ui/padron').then((m) => m.ContribuyenteList),
+      },
+      {
         path: 'ingresos',
         // Aquí iría loadComponent: () => import(...)
         component: GobButtonComponent,

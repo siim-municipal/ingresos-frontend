@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   // URL de tu API Gateway (Punto único de entrada al backend)
-  apiUrl: 'http://localhost:8080',
+  apiUrl: 'http://localhost:9090/api',
 
   auth: {
     // Variable: ISSUER_URI_KEYCLOAK (La pública)

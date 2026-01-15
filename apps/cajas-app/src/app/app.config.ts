@@ -1,8 +1,9 @@
 import {
-  APP_INITIALIZER,
+  provideAppInitializer,
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
+  inject,
 } from '@angular/core';
 import {
   provideRouter,
@@ -11,17 +12,15 @@ import {
 } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { GobIconRegistryService } from '@gob-ui/components';
 import { OAuthStorage, provideOAuthClient } from 'angular-oauth2-oidc';
 import { AuthService } from './core/services/auth/auth.service';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { PrefixOAuthStorage } from './core/utils/auth-storage';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
-
-function initializeAppFactory(authService: AuthService): () => Promise<void> {
-  return () => authService.initializeLogin();
-}
+import { environment } from '../enviroments/enviroment.development';
+import { API_BASE_URL } from '@gob-ui/shared/services';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,19 +34,15 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideOAuthClient(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (iconRegistry: GobIconRegistryService) => () =>
-        iconRegistry.registerIcons(),
-      deps: [GobIconRegistryService],
-      multi: true,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeAppFactory,
-      deps: [AuthService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const registry = inject(GobIconRegistryService);
+      return registry.registerIcons();
+    }),
+    provideAppInitializer(() => {
+      const auth = inject(AuthService);
+      return auth.initializeLogin();
+    }),
     { provide: OAuthStorage, useClass: PrefixOAuthStorage },
+    { provide: API_BASE_URL, useValue: environment.apiUrl },
   ],
 };
