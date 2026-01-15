@@ -1,41 +1,52 @@
 import { Route } from '@angular/router';
 import { GobButtonComponent } from '@gob-ui/components';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout';
+import { LoginComponent } from './features/auth/login';
 import { authGuard } from './core/guard/auth.guard';
+import { roleGuard } from './core/guard/role.guard';
 
 export const appRoutes: Route[] = [
-  // 1. Ruta para Vistas Públicas (Login)
+  // 1. RUTAS PÚBLICAS (Login)
   {
     path: '',
-    loadComponent: () =>
-      import('./layouts/auth-layout/auth-layout').then(
-        (m) => m.AuthLayoutComponent,
-      ),
+    component: AuthLayoutComponent,
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
         path: 'login',
-        loadComponent: () =>
-          import('./features/auth/login').then((m) => m.LoginComponent),
+        component: LoginComponent,
       },
     ],
   },
 
-  // 2. Ruta para Vistas Privadas (Dashboard)
+  // 2. RUTAS PRIVADAS
   {
     path: '',
+    component: MainLayoutComponent,
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./layouts/main-layout/main-layout').then(
-        (m) => m.MainLayoutComponent,
-      ),
     children: [
       {
         path: 'dashboard',
         component: GobButtonComponent,
       },
+      {
+        path: 'ingresos',
+        // Aquí iría loadComponent: () => import(...)
+        component: GobButtonComponent,
+
+        canActivate: [roleGuard],
+        data: { roles: ['TESORERO', 'ADMIN'] },
+      },
+      {
+        path: 'configuracion',
+        component: GobButtonComponent,
+
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
+      },
     ],
   },
 
-  // 3. Fallback
   { path: '**', redirectTo: 'login' },
 ];

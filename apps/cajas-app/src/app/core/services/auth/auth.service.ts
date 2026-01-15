@@ -12,7 +12,6 @@ export class AuthService {
   private oauthService = inject(OAuthService);
   private router = inject(Router);
 
-  // --- Estado Reactivo con Signals ---
   // Signal privado mutable
   private _currentUser = signal<UserProfile | null>(null);
 
@@ -26,11 +25,8 @@ export class AuthService {
     this.configureOAuth();
   }
 
-  private configureOAuth() {
+  private configureOAuth(): void {
     this.oauthService.configure(authConfig);
-
-    // Configurar almacenamiento de tokens (localStorage por defecto, sessionStorage es mas seguro para pestañas)
-    // this.oauthService.setStorage(sessionStorage);
 
     // Automatizar el Refresh Token
     this.oauthService.setupAutomaticSilentRefresh();

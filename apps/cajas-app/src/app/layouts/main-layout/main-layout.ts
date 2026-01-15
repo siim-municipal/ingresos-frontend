@@ -6,22 +6,19 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-// Material
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu'; // <--- Nuevo para el menú de usuario
+import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
-// Utils
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { HasRoleDirective } from '../../shared/directives/has-role';
-// Auth
 
 @Component({
   selector: 'app-main-layout',
@@ -41,7 +38,7 @@ import { HasRoleDirective } from '../../shared/directives/has-role';
     HasRoleDirective,
   ],
   templateUrl: './main-layout.html',
-  styleUrl: './main-layout.scss', // Si tienes estilos
+  styleUrl: './main-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLayoutComponent {
@@ -74,7 +71,6 @@ export class MainLayoutComponent {
     }
 
     // Buscamos roles que empiecen con ROLE_ (ej: ROLE_TESORERO)
-    // Excluimos offline_access y uma_authorization que vi en tu JWT
     const businessRole = u.realm_access.roles.find((r) =>
       r.startsWith('ROLE_'),
     );

@@ -105,14 +105,21 @@
 
         <mat-divider class="my-2"></mat-divider>
 
-        <a
+        <button mat-list-item *gobHasRole="['ADMIN']" routerLink="/ingresos">
+          <mat-icon matListItemIcon class="text-slate-500">settings</mat-icon>
+          <span>Configuración Avanzada</span>
+        </button>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <button
           mat-list-item
           (click)="logout()"
           class="hover:bg-red-50 text-red-600"
         >
           <mat-icon matListItemIcon class="text-red-500">logout</mat-icon>
           <span matListItemTitle>Cerrar Sesión</span>
-        </a>
+        </button>
       </mat-nav-list>
     </mat-sidenav>
 
