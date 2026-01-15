@@ -10,9 +10,16 @@ import {
   withViewTransitions,
 } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { GobIconRegistryService } from '@gob-ui/components';
+import { provideOAuthClient } from 'angular-oauth2-oidc';
+import { AuthService } from './core/services/auth/auth.service';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+
+function initializeAppFactory(authService: AuthService): () => Promise<void> {
+  return () => authService.initializeLogin();
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,12 +31,19 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideOAuthClient(),
     {
       provide: APP_INITIALIZER,
       useFactory: (iconRegistry: GobIconRegistryService) => () =>
         iconRegistry.registerIcons(),
       deps: [GobIconRegistryService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAppFactory,
+      deps: [AuthService],
       multi: true,
     },
   ],

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@gob-ui/components": ["libs/ui/components/src/index.ts"]
+      "@gob-ui/components": ["libs/ui/components/src/index.ts"],
+      "@gob-ui/shared/interfaces": ["libs/shared/interfaces/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

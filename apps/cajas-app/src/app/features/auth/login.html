@@ -1,45 +1,42 @@
-<div class="bg-white p-8 rounded-2xl shadow-xl w-full">
-  <div class="text-center mb-8">
-    <h1 class="text-2xl font-bold text-gray-800">Bienvenido</h1>
-    <p class="text-gray-500 text-sm mt-1">
-      Ingresa tus credenciales para continuar
+<div class="bg-white p-10 rounded-2xl shadow-xl w-full text-center">
+  <div class="mb-6 flex justify-center">
+    <div
+      class="h-16 w-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600"
+    >
+      <span class="material-icons text-4xl">security</span>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">Sistema Integral</h1>
+    <h2 class="text-lg text-blue-600 font-medium">Tesorería Municipal</h2>
+    <p class="text-gray-500 text-sm mt-4 leading-relaxed">
+      Para acceder a los módulos de recaudación, debes autenticarte a través del
+      servicio de identidad institucional.
     </p>
   </div>
 
-  <form
-    [formGroup]="loginForm"
-    (ngSubmit)="onSubmit()"
-    class="flex flex-col gap-5"
-  >
-    <gob-input
-      label="Correo Electrónico"
-      type="email"
-      formControlName="email"
-      placeholder="funcionario@municipio.gob.mx"
+  <div class="flex flex-col gap-4">
+    <gob-button
+      variant="primary"
+      type="button"
+      [loading]="isLoading()"
+      (action)="login()"
+      label="Iniciar Sesión Institucional"
     >
-    </gob-input>
+    </gob-button>
 
-    <gob-input label="Contraseña" type="password" formControlName="password">
-    </gob-input>
+    @if (statusMessage()) {
+    <p class="text-xs text-blue-600 animate-pulse mt-2">
+      {{ statusMessage() }}
+    </p>
+    }
+  </div>
 
-    <div class="flex justify-end -mt-2">
-      <a
-        routerLink="/recuperar"
-        class="text-xs text-blue-600 hover:underline cursor-pointer"
-      >
-        ¿Olvidaste tu contraseña?
-      </a>
-    </div>
-
-    <div class="mt-4">
-      <gob-button
-        variant="primary"
-        type="submit"
-        [loading]="isLoading()"
-        label="Ingresar al Sistema"
-        class="w-full block"
-      >
-      </gob-button>
-    </div>
-  </form>
+  <div class="mt-8 pt-6 border-t border-gray-100">
+    <p class="text-xs text-gray-400">
+      Al ingresar, aceptas los términos de uso y políticas de privacidad del H.
+      Ayuntamiento.
+    </p>
+  </div>
 </div>

@@ -1,0 +1,125 @@
+<div class="flex h-screen flex-col">
+  <mat-toolbar color="primary" class="z-20 shadow-md relative px-4">
+    @if (isMobile()) {
+    <button mat-icon-button (click)="sidenav.toggle()" class="mr-2">
+      <mat-icon>menu</mat-icon>
+    </button>
+    }
+
+    <div class="flex items-center gap-2">
+      <mat-icon class="hidden sm:block">account_balance</mat-icon>
+      <span class="font-bold tracking-wide">SIIM Municipal</span>
+    </div>
+
+    <span class="flex-auto"></span>
+
+    <div class="flex items-center gap-2">
+      @if (user()) {
+      <div class="hidden md:flex flex-col items-end leading-tight mr-2">
+        <span class="text-sm font-semibold">{{ user()?.name }}</span>
+
+        <span
+          class="text-[10px] opacity-80 uppercase tracking-wider text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full mt-0.5 font-bold"
+        >
+          {{ userRole() | titlecase }}
+        </span>
+      </div>
+      }
+
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="ml-1">
+        @if (user()) {
+        <div
+          class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold border border-white/30"
+        >
+          {{ userInitials() }}
+        </div>
+        } @else {
+        <mat-icon>account_circle</mat-icon>
+        }
+      </button>
+
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <div class="px-4 py-3 border-b border-slate-100 mb-2">
+          <p class="text-sm font-bold text-slate-800">{{ user()?.name }}</p>
+          <p class="text-xs text-slate-500">{{ user()?.email }}</p>
+        </div>
+
+        <button mat-menu-item disabled>
+          <mat-icon>settings</mat-icon>
+          <span>Configuración</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item (click)="logout()" class="text-red-600">
+          <mat-icon color="warn">logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="flex-auto bg-slate-50">
+    <mat-sidenav
+      #sidenav
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="!isMobile()"
+      class="w-64 border-r bg-white shadow-sm"
+      fixedInViewport="false"
+    >
+      <div
+        class="h-16 flex items-center px-6 border-b border-slate-100 bg-slate-50"
+      >
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest"
+          >Navegación</span
+        >
+      </div>
+
+      <mat-nav-list class="pt-2">
+        <a
+          mat-list-item
+          routerLink="/dashboard"
+          routerLinkActive="bg-blue-50 text-blue-700 border-r-4 border-blue-600"
+        >
+          <mat-icon
+            matListItemIcon
+            class="text-slate-500"
+            [class.text-blue-600]="rlaDashboard.isActive"
+            >dashboard</mat-icon
+          >
+          <span matListItemTitle class="font-medium">Dashboard</span>
+        </a>
+        <span #rlaDashboard="routerLinkActive" routerLinkActive></span>
+
+        <a
+          mat-list-item
+          routerLink="/ingresos"
+          *gobHasRole="['TESORERO', 'ADMIN']"
+          routerLinkActive="bg-blue-50 text-blue-700 border-r-4 border-blue-600"
+        >
+          <mat-icon matListItemIcon class="text-slate-500"
+            >attach_money</mat-icon
+          >
+          <span matListItemTitle class="font-medium">Ingresos</span>
+        </a>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <a
+          mat-list-item
+          (click)="logout()"
+          class="hover:bg-red-50 text-red-600"
+        >
+          <mat-icon matListItemIcon class="text-red-500">logout</mat-icon>
+          <span matListItemTitle>Cerrar Sesión</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="p-6 overflow-auto">
+      <div class="max-w-7xl mx-auto">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

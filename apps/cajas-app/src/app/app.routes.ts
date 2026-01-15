@@ -1,16 +1,15 @@
 import { Route } from '@angular/router';
-import {
-  AuthLayoutComponent,
-  MainLayoutComponent,
-  GobButtonComponent,
-} from '@gob-ui/components';
-import { LoginComponent } from './features/auth/login';
+import { GobButtonComponent } from '@gob-ui/components';
+import { authGuard } from './core/guard/auth.guard';
 
 export const appRoutes: Route[] = [
   // 1. Ruta para Vistas Públicas (Login)
   {
     path: '',
-    component: AuthLayoutComponent,
+    loadComponent: () =>
+      import('./layouts/auth-layout/auth-layout').then(
+        (m) => m.AuthLayoutComponent,
+      ),
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
@@ -24,7 +23,11 @@ export const appRoutes: Route[] = [
   // 2. Ruta para Vistas Privadas (Dashboard)
   {
     path: '',
-    component: MainLayoutComponent,
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./layouts/main-layout/main-layout').then(
+        (m) => m.MainLayoutComponent,
+      ),
     children: [
       {
         path: 'dashboard',

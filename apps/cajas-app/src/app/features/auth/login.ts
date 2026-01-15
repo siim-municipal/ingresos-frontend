@@ -3,50 +3,48 @@ import {
   inject,
   signal,
   ChangeDetectionStrategy,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { GobButtonComponent, InputComponent } from '@gob-ui/components';
+import { Router } from '@angular/router';
+import { GobButtonComponent } from '@gob-ui/components';
+import { AuthService } from '../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
     GobButtonComponent,
-    InputComponent,
+    // Ya no necesitamos GobInputComponent ni ReactiveFormsModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
-  private fb = inject(FormBuilder);
+export class LoginComponent implements OnInit {
+  private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Señal para el estado de carga
+  // Mantenemos isLoading para evitar dobles clics mientras redirige
   isLoading = signal(false);
 
-  loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-  });
+  // Mensaje de estado opcional
+  statusMessage = signal('');
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.isLoading.set(true);
-
-      // Simular petición al backend
-      setTimeout(() => {
-        this.isLoading.set(false);
-        // Navegar al Dashboard usando el Router
-        this.router.navigate(['/dashboard']);
-      }, 1500);
-    } else {
-      this.loginForm.markAllAsTouched();
+  ngOnInit() {
+    // Si el usuario ya está logueado, lo mandamos directo al dashboard
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
     }
+  }
+
+  login() {
+    this.isLoading.set(true);
+    this.statusMessage.set('Redirigiendo al Portal de Identidad...');
+
+    // Delegamos el proceso al servicio.
+    // Esto redirigirá el navegador fuera de tu app hacia Keycloak (localhost:8180)
+    this.authService.login();
   }
 }
