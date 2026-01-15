@@ -1,0 +1,61 @@
+<div class="flex h-screen flex-col">
+  <mat-toolbar color="primary" class="z-20 shadow-md relative">
+    @if (isMobile()) {
+    <button mat-icon-button (click)="sidenav.toggle()" class="mr-2">
+      <mat-icon>menu</mat-icon>
+    </button>
+    }
+
+    <span>SIIM Municipal</span>
+
+    <span class="flex-auto"></span>
+
+    <button mat-icon-button>
+      <mat-icon>notifications</mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="flex-auto">
+    <mat-sidenav
+      #sidenav
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="!isMobile()"
+      class="w-64 border-r bg-white"
+      fixedInViewport="false"
+    >
+      <mat-nav-list>
+        <a
+          mat-list-item
+          routerLink="/dashboard"
+          routerLinkActive="bg-slate-100 text-primary"
+        >
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Dashboard</span>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/ingresos"
+          routerLinkActive="bg-slate-100 text-primary"
+        >
+          <mat-icon matListItemIcon>attach_money</mat-icon>
+          <span matListItemTitle>Ingresos</span>
+        </a>
+
+        <mat-divider></mat-divider>
+
+        <a mat-list-item (click)="logout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>Cerrar Sesión</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="bg-slate-50 p-6">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
