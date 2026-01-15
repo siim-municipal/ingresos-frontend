@@ -4,13 +4,17 @@ import { OAuthService, OAuthEvent } from 'angular-oauth2-oidc';
 import { jwtDecode } from 'jwt-decode';
 import { authConfig } from './auth.config';
 import { UserProfile } from '@gob-ui/shared/interfaces';
+import { FeedbackService } from '../feedback.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private oauthService = inject(OAuthService);
+
   private router = inject(Router);
+
+  public isAuthServiceAvailable = signal<boolean>(false);
 
   // Signal privado mutable
   private _currentUser = signal<UserProfile | null>(null);
@@ -20,6 +24,8 @@ export class AuthService {
 
   // Signal computada: Se actualiza automáticamente si currentUser cambia
   public isLoggedIn = computed(() => !!this._currentUser());
+
+  private feedback = inject(FeedbackService);
 
   constructor() {
     this.configureOAuth();
@@ -49,15 +55,30 @@ export class AuthService {
    */
   public async initializeLogin(): Promise<void> {
     try {
-      await this.oauthService.loadDiscoveryDocumentAndTryLogin();
+      const loadPromise = this.oauthService.loadDiscoveryDocumentAndTryLogin();
 
-      // Si tenemos token válido al iniciar, actualizamos el estado
+      // Agregamos un timeout manual de 3 segundos para no esperar eternamente si la red cuelga
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('TIMEOUT_KEYCLOAK')), 3000),
+      );
+
+      // Carrera: Lo que ocurra primero (Carga o Timeout)
+      await Promise.race([loadPromise, timeoutPromise]);
+
+      this.isAuthServiceAvailable.set(true);
+
       if (this.oauthService.hasValidAccessToken()) {
         this.updateUserState();
       }
     } catch (error) {
-      console.error('Error al inicializar OAuth:', error);
-      // Manejar error de conexión con el SSO
+      console.error('No se pudo conectar con el Servicio de Identidad:', error);
+
+      this.isAuthServiceAvailable.set(false);
+
+      this.feedback.error(
+        'Servicio de Identidad No Disponible',
+        'No se pudo verificar su sesión. Es posible que el servidor esté en mantenimiento.',
+      );
     }
   }
 

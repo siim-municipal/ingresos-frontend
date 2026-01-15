@@ -17,6 +17,7 @@ import { OAuthStorage, provideOAuthClient } from 'angular-oauth2-oidc';
 import { AuthService } from './core/services/auth/auth.service';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { PrefixOAuthStorage } from './core/utils/auth-storage';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 function initializeAppFactory(authService: AuthService): () => Promise<void> {
   return () => authService.initializeLogin();
@@ -32,7 +33,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideOAuthClient(),
     {
       provide: APP_INITIALIZER,

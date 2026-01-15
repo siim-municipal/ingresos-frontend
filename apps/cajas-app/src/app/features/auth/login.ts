@@ -23,7 +23,7 @@ import { AuthService } from '../../core/services/auth/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private router = inject(Router);
 
   // Mantenemos isLoading para evitar dobles clics mientras redirige
@@ -32,14 +32,17 @@ export class LoginComponent implements OnInit {
   // Mensaje de estado opcional
   statusMessage = signal('');
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Si el usuario ya está logueado, lo mandamos directo al dashboard
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
     }
   }
 
-  login() {
+  login(): void {
+    if (!this.authService.isAuthServiceAvailable()) {
+      return;
+    }
     this.isLoading.set(true);
     this.statusMessage.set('Redirigiendo al Portal de Identidad...');
 
