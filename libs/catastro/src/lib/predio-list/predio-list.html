@@ -118,16 +118,16 @@
       </ng-container>
 
       <ng-container matColumnDef="acciones">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          class="sticky-header text-right"
-        ></th>
+        <th mat-header-cell *matHeaderCellDef class="text-right"></th>
         <td mat-cell *matCellDef="let row" class="text-right">
           @if (!loading()) {
-          <button mat-icon-button class="text-slate-400 hover:text-blue-600">
+          <a
+            mat-icon-button
+            [routerLink]="['/catastro/predio', row.id]"
+            class="text-slate-400 hover:text-blue-600"
+          >
             <mat-icon>visibility</mat-icon>
-          </button>
+          </a>
           }
         </td>
       </ng-container>

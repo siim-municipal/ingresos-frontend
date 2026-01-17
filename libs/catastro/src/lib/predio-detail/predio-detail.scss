@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+.info-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-lg border border-slate-200 mb-6;
+}
+.info-item {
+  @apply flex flex-col;
+}
+.label {
+  @apply text-xs text-slate-500 font-medium uppercase tracking-wider;
+}
+.value {
+  @apply text-sm font-bold text-slate-800;
+}

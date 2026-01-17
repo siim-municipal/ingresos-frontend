@@ -9,14 +9,17 @@ export interface Predio {
   usoSuelo?: string;
   valorCatastral?: number;
 
+  areaTerrenoM2?: number;
+  areaConstruccionM2?: number;
+
   // Dirección
   calle?: string;
   numeroExterior?: string;
-  coloniaBarrio?: string; // Nombre exacto de tu Entity
+  coloniaBarrio?: string;
   codigoPostal?: string;
 
   // Estado Fiscal
-  ultimoAnioPagado?: number; // Vital para el Estatus (Verde/Rojo)
+  ultimoAnioPagado?: number;
 
   // Auditoría (Heredado de BaseEntity)
   createdAt?: string;

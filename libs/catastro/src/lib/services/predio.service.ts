@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
-import { API_BASE_URL } from '@gob-ui/shared/services';
+import { API_BASE_URL, FeedbackService } from '@gob-ui/shared/services';
 import {
   PageResponse,
   Predio,
@@ -11,6 +11,8 @@ import {
 @Injectable({ providedIn: 'root' })
 export class PredioService {
   private http = inject(HttpClient);
+
+  private feedBack = inject(FeedbackService);
 
   private baseUrl = inject(API_BASE_URL);
 
@@ -41,5 +43,15 @@ export class PredioService {
           });
         }),
       );
+  }
+
+  findById(id: string): Observable<Predio> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<Predio>(url).pipe(
+      catchError((error) => {
+        this.feedBack.error('Error al obtener Predio', `Detalles: ${error}`);
+        throw error;
+      }),
+    );
   }
 }

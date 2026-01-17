@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PredioService } from '../services/predio.service';
 import { Predio } from '../models/predio.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-predio-list',
@@ -24,6 +25,7 @@ import { Predio } from '../models/predio.model';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
+    RouterLink,
   ],
   templateUrl: './predio-list.html',
   styleUrl: './predio-list.scss',
@@ -76,7 +78,7 @@ export class PredioList {
     size: number,
     active: string,
     direction: string,
-  ) {
+  ): void {
     this.loading.set(true);
 
     // Mapeo formato Sort de Angular MatSort -> Spring Data ("campo,dir")

@@ -1,0 +1,128 @@
+<div class="max-w-7xl mx-auto p-6 bg-white min-h-screen">
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <div class="flex items-center gap-2 text-slate-500 text-sm mb-1">
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>Volver al Padrón</span>
+      </div>
+      <h1 class="text-3xl font-bold text-slate-800">
+        Predio {{ predio().claveCatastral }}
+      </h1>
+      <p class="text-slate-500">{{ predio().coloniaBarrio }}</p>
+    </div>
+
+    <div class="flex gap-2">
+      <button mat-stroked-button color="primary">
+        <mat-icon>print</mat-icon> Ficha Técnica
+      </button>
+      <button mat-flat-button color="primary">
+        <mat-icon>edit</mat-icon> Editar
+      </button>
+    </div>
+  </div>
+
+  <mat-tab-group
+    [selectedIndex]="selectedTabIndex()"
+    (selectedTabChange)="onTabChange($event)"
+    animationDuration="200ms"
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+  >
+    <mat-tab label="Datos Generales">
+      <div class="py-6 animate-fade-in">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Clave Catastral</span>
+            <span class="value font-mono">{{ predio().claveCatastral }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Cuenta Predial</span>
+            <span class="value">{{ predio().cuentaPredial || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Tipo Predio</span>
+            <span class="value">{{ predio().tipoPredio }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Uso de Suelo</span>
+            <span class="value">{{ predio().usoSuelo || 'SIN ASIGNAR' }}</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-4 border rounded-lg">
+            <h3 class="font-bold text-slate-700 mb-4 border-b pb-2">
+              Valuación
+            </h3>
+            <div class="flex justify-between py-2">
+              <span class="text-slate-600">Valor Catastral</span>
+              <span class="font-mono font-bold"
+                >{{ predio().valorCatastral | currency }}</span
+              >
+            </div>
+          </div>
+
+          <div class="p-4 border rounded-lg">
+            <h3 class="font-bold text-slate-700 mb-4 border-b pb-2">
+              Superficies
+            </h3>
+            <div class="flex justify-between py-2 border-b border-slate-100">
+              <span class="text-slate-600">Terreno</span>
+              <span class="font-mono font-bold"
+                >{{ predio().areaTerrenoM2 | number }} m²</span
+              >
+            </div>
+            <div class="flex justify-between py-2">
+              <span class="text-slate-600">Construcción</span>
+              <span class="font-mono font-bold"
+                >{{ predio().areaConstruccionM2| number }} m²</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Propietarios">
+      @defer (on viewport) {
+      <div class="py-6">
+        <lib-predio-propietarios [predioId]="predio().id" />
+      </div>
+      } @placeholder {
+      <div class="h-32 flex items-center justify-center text-slate-400">
+        Cargando copropietarios...
+      </div>
+      }
+    </mat-tab>
+
+    <mat-tab label="Historial de Pagos">
+      @defer (on viewport) {
+      <div class="py-6">
+        <lib-predio-historial [predioId]="predio().id" />
+      </div>
+      } @placeholder {
+      <div class="py-12 flex justify-center">
+        <span
+          class="animate-spin h-6 w-6 border-2 border-blue-600 rounded-full border-t-transparent"
+        ></span>
+      </div>
+      }
+    </mat-tab>
+
+    <mat-tab label="Ubicación Geográfica">
+      @defer (on interaction; prefetch on idle) {
+      <div class="py-6 h-[400px]">
+        <lib-predio-ubicacion [lat]="18.0833" [lon]="-96.1167" />
+      </div>
+      } @placeholder {
+      <div
+        class="h-[400px] bg-slate-100 rounded flex items-center justify-center text-slate-400"
+      >
+        Haga clic para cargar el mapa interactivo
+      </div>
+      }
+    </mat-tab>
+  </mat-tab-group>
+</div>
