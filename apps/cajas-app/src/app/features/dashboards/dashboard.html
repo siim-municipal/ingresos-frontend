@@ -1,0 +1,134 @@
+<div class="max-w-7xl mx-auto p-6 space-y-8 animate-fade-in">
+  <header
+    class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+  >
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">
+        Hola, {{ userName() }} 👋
+      </h1>
+      <p class="text-slate-500">
+        Resumen de operaciones al {{ currentDate() | date: 'fullDate' }}
+      </p>
+    </div>
+
+    <button mat-flat-button color="primary" class="rounded-lg">
+      <mat-icon>assessment</mat-icon> Generar Corte del Día
+    </button>
+  </header>
+
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    @for (stat of stats(); track stat.label) {
+    <div class="kpi-card">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm font-medium text-slate-500 mb-1">
+            {{ stat.label }}
+          </p>
+          <h3 class="text-2xl font-bold text-slate-800">{{ stat.value }}</h3>
+
+          @if (stat.trend) {
+          <div
+            class="flex items-center gap-1 mt-2 text-xs font-medium"
+            [class.text-emerald-600]="stat.trendPositive"
+            [class.text-red-600]="!stat.trendPositive"
+          >
+            <mat-icon class="text-[16px] w-[16px] h-[16px] overflow-visible">
+              {{ stat.trendPositive ? 'trending_up' : 'trending_down' }}
+            </mat-icon>
+            <span>{{ stat.trend }}</span>
+          </div>
+          }
+        </div>
+
+        <div class="icon-wrapper" [ngClass]="stat.colorClass">
+          <mat-icon>{{ stat.icon }}</mat-icon>
+        </div>
+      </div>
+    </div>
+    }
+  </section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-4">
+      <h2 class="text-lg font-bold text-slate-800">Acciones Rápidas</h2>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <a routerLink="/padron/nuevo" class="action-btn">
+          <div class="p-3 rounded-full bg-indigo-50 text-indigo-600">
+            <mat-icon>person_add</mat-icon>
+          </div>
+          <span class="font-medium text-sm">Nuevo Contribuyente</span>
+        </a>
+
+        <a routerLink="/catastro/nuevo" class="action-btn">
+          <div class="p-3 rounded-full bg-blue-50 text-blue-600">
+            <mat-icon>home_work</mat-icon>
+          </div>
+          <span class="font-medium text-sm">Alta de Predio</span>
+        </a>
+
+        <button class="action-btn">
+          <div class="p-3 rounded-full bg-emerald-50 text-emerald-600">
+            <mat-icon>point_of_sale</mat-icon>
+          </div>
+          <span class="font-medium text-sm">Cobro Express</span>
+        </button>
+
+        <button class="action-btn">
+          <div class="p-3 rounded-full bg-purple-50 text-purple-600">
+            <mat-icon>print</mat-icon>
+          </div>
+          <span class="font-medium text-sm">Reimprimir Recibo</span>
+        </button>
+
+        <button class="action-btn">
+          <div class="p-3 rounded-full bg-orange-50 text-orange-600">
+            <mat-icon>search</mat-icon>
+          </div>
+          <span class="font-medium text-sm">Consulta Global</span>
+        </button>
+
+        <a routerLink="/padron" class="action-btn">
+          <div class="p-3 rounded-full bg-slate-50 text-slate-600">
+            <mat-icon>list</mat-icon>
+          </div>
+          <span class="font-medium text-sm">Ver Padrón</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-slate-800">Actividad Reciente</h2>
+        <button mat-icon-button class="text-slate-400">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        @for (item of recentActivity(); track item.id) {
+        <div
+          class="flex items-start gap-3 pb-3 border-b border-slate-100 last:border-0 last:pb-0"
+        >
+          <div
+            class="mt-1 p-2 rounded-full"
+            [ngClass]="getActivityColor(item.type)"
+          >
+            <mat-icon class="text-sm w-5 h-5 flex items-center justify-center"
+              >{{ getActivityIcon(item.type) }}</mat-icon
+            >
+          </div>
+          <div>
+            <p class="text-sm font-medium text-slate-700">{{ item.title }}</p>
+            <span class="text-xs text-slate-400">{{ item.time }}</span>
+          </div>
+        </div>
+        }
+      </div>
+
+      <button mat-button class="w-full mt-4 text-blue-600">
+        Ver todo el historial
+      </button>
+    </div>
+  </div>
+</div>

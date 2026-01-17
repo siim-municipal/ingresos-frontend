@@ -23,12 +23,15 @@ export const appRoutes: Route[] = [
     canActivate: [authGuard],
     children: [
       // A. Dashboard (Carga inmediata o ligera)
-      // {
-      //   path: 'dashboard',
-      //   loadComponent: () =>
-      //     import('@gob-ui/components').then((m) => m.GobButtonComponent),
-      //   title: 'Tablero Principal',
-      // },
+      {
+        path: 'dashboard',
+        // Opción A: Si creaste el componente en 'apps/cajas-app/src/app/features/dashboard'
+        loadComponent: () =>
+          import('./features/dashboards/dashboard').then(
+            (m) => m.DashboardComponent,
+          ),
+        title: 'Tablero Principal - SIIM',
+      },
 
       // B. Módulo Padrón (LAZY LOADING DE RUTAS HIJAS)
       {
@@ -37,6 +40,13 @@ export const appRoutes: Route[] = [
         data: { roles: ['TESORERO', 'CAJERO'] },
         loadChildren: () =>
           import('@gob-ui/padron').then((m) => m.padronRoutes),
+      },
+      {
+        path: 'catastro',
+        canActivate: [roleGuard],
+        data: { roles: ['TESORERO', 'CAJERO'] },
+        loadChildren: () =>
+          import('@gob-ui/catastro').then((m) => m.catastroRoutes),
       },
 
       // C. Módulo Ingresos (Protegido por Rol)

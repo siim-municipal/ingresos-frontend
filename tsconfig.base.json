@@ -18,7 +18,8 @@
       "@gob-ui/components": ["libs/ui/components/src/index.ts"],
       "@gob-ui/shared/interfaces": ["libs/shared/interfaces/src/index.ts"],
       "@gob-ui/padron": ["libs/padron/src/index.ts"],
-      "@gob-ui/shared/services": ["libs/shared/services/src/index.ts"]
+      "@gob-ui/shared/services": ["libs/shared/services/src/index.ts"],
+      "@gob-ui/catastro": ["libs/catastro/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

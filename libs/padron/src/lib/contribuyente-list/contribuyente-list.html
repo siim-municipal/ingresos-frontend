@@ -30,16 +30,17 @@
     <span class="material-icons text-base">error_outline</span>
     {{ store.error() }}
   </div>
-  }
-
-  <div class="overflow-hidden border border-slate-200 rounded-lg relative z-10">
+  } @defer (on viewport){
+  <div
+    class="relative overflow-auto max-h-[75vh] rounded-lg border border-slate-200 shadow-inner bg-white"
+  >
     <table class="w-full text-sm text-left">
       <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
         <tr>
-          <th class="px-4 py-3">RFC</th>
-          <th class="px-4 py-3">Contribuyente</th>
-          <th class="px-4 py-3">Tipo</th>
-          <th class="px-4 py-3 text-right">Acciones</th>
+          <th class="px-4 py-3 sticky-header">RFC</th>
+          <th class="px-4 py-3 sticky-header">Contribuyente</th>
+          <th class="px-4 py-3 sticky-header">Tipo</th>
+          <th class="px-4 py-3 text-right sticky-header">Acciones</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100 bg-white">
@@ -112,5 +113,16 @@
     (closeAction)="store.clearSelection()"
     (editAction)="onEdit($event)"
   ></lib-contribuyente-detail>
+  } } @placeholder {
+  <div
+    class="h-64 flex items-center justify-center bg-slate-50 rounded border border-slate-200"
+  >
+    <div class="flex flex-col items-center">
+      <span
+        class="animate-spin h-6 w-6 border-2 border-blue-500 rounded-full border-t-transparent mb-2"
+      ></span>
+      <span class="text-slate-400 text-sm">Cargando módulo de padrones...</span>
+    </div>
+  </div>
   }
 </div>
