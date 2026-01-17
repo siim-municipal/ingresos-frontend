@@ -7,17 +7,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { GobButtonComponent } from '@gob-ui/components';
 import { AuthService } from '../../core/services/auth/auth.service';
+import { GobButtonComponent } from '@gob-ui/components';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    GobButtonComponent,
-    // Ya no necesitamos GobInputComponent ni ReactiveFormsModule
-  ],
+  imports: [CommonModule, GobButtonComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

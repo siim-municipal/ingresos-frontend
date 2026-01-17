@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 
 @Component({
-  selector: 'gob-button',
+  selector: 'lib-button',
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,

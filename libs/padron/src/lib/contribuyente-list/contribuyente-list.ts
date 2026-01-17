@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ContribuyenteStore } from '../state/contribuyente.store';
 import { ContribuyenteSearch } from '../contribuyente-search/contribuyente-search';
 import { ContribuyenteDetail } from '../contribuyente-detail/contribuyente-detail';
+import { RouterLink } from '@angular/router';
+import { GobButtonComponent } from '@gob-ui/components';
 
 @Component({
   selector: 'lib-contribuyente-list',
@@ -13,6 +15,8 @@ import { ContribuyenteDetail } from '../contribuyente-detail/contribuyente-detai
     FormsModule,
     ContribuyenteSearch,
     ContribuyenteDetail,
+    RouterLink,
+    GobButtonComponent,
   ],
   templateUrl: './contribuyente-list.html',
   styles: [],

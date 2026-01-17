@@ -48,7 +48,8 @@
           <span class="material-icons text-[14px] text-slate-400"
             >calendar_today</span
           >
-          {{ contribuyente().fechaRegistro | date:'longDate' }}
+          <!-- TODO: incluir en el DTO del back la fecha creacion -->
+          {{ contribuyente().fechaRegistro| date:'longDate' }}
         </p>
       </div>
 

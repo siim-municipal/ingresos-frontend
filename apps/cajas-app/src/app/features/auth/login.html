@@ -17,14 +17,14 @@
   </div>
 
   <div class="flex flex-col gap-4">
-    <gob-button
+    <lib-button
       variant="primary"
       type="button"
       [loading]="isLoading()"
       (action)="login()"
       label="Iniciar Sesión Institucional"
     >
-    </gob-button>
+    </lib-button>
 
     @if (!authService.isAuthServiceAvailable()) {
     <div

@@ -1,0 +1,7 @@
+.input-base {
+  @apply block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm transition-all;
+}
+
+.error-msg {
+  @apply text-xs text-red-600 mt-1 animate-fade-in;
+}

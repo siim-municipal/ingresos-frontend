@@ -1,5 +1,4 @@
 import { Route } from '@angular/router';
-import { GobButtonComponent } from '@gob-ui/components';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { LoginComponent } from './features/auth/login';
@@ -7,49 +6,57 @@ import { authGuard } from './core/guard/auth.guard';
 import { roleGuard } from './core/guard/role.guard';
 
 export const appRoutes: Route[] = [
-  // 1. RUTAS PÚBLICAS (Login)
+  // RUTAS PÚBLICAS (Auth)
   {
     path: '',
     component: AuthLayoutComponent,
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
-      {
-        path: 'login',
-        component: LoginComponent,
-      },
+      { path: 'login', component: LoginComponent, title: 'Iniciar Sesión' },
     ],
   },
 
-  // 2. RUTAS PRIVADAS
+  // RUTAS PRIVADAS (App Principal)
   {
     path: '',
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
-      {
-        path: 'dashboard',
-        component: GobButtonComponent,
-      },
+      // A. Dashboard (Carga inmediata o ligera)
+      // {
+      //   path: 'dashboard',
+      //   loadComponent: () =>
+      //     import('@gob-ui/components').then((m) => m.GobButtonComponent),
+      //   title: 'Tablero Principal',
+      // },
+
+      // B. Módulo Padrón (LAZY LOADING DE RUTAS HIJAS)
       {
         path: 'padron',
-        loadComponent: () =>
-          import('@gob-ui/padron').then((m) => m.ContribuyenteList),
-      },
-      {
-        path: 'ingresos',
-        // Aquí iría loadComponent: () => import(...)
-        component: GobButtonComponent,
-
         canActivate: [roleGuard],
-        data: { roles: ['TESORERO', 'ADMIN'] },
+        data: { roles: ['TESORERO', 'CAJERO'] },
+        loadChildren: () =>
+          import('@gob-ui/padron').then((m) => m.padronRoutes),
       },
-      {
-        path: 'configuracion',
-        component: GobButtonComponent,
 
-        canActivate: [roleGuard],
-        data: { roles: ['ADMIN'] },
-      },
+      // C. Módulo Ingresos (Protegido por Rol)
+      // {
+      //   path: 'ingresos',
+      //   canActivate: [roleGuard],
+      //   data: { roles: ['TESORERO', 'ADMIN'] },
+      //   component: GobButtonComponent,
+      // },
+
+      // D. Configuración
+      // {
+      //   path: 'configuracion',
+      //   canActivate: [roleGuard],
+      //   data: { roles: ['ADMIN'] },
+      //   component: GobButtonComponent,
+      // },
+
+      // Redirección por defecto interna
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
 
