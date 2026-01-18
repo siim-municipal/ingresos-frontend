@@ -114,7 +114,10 @@
     <mat-tab label="Ubicación Geográfica">
       @defer (on interaction; prefetch on idle) {
       <div class="py-6 h-[400px]">
-        <lib-predio-ubicacion [lat]="18.0833" [lon]="-96.1167" />
+        <lib-predio-ubicacion
+          [lat]="predio().latitud"
+          [lon]="predio().longitud"
+        />
       </div>
       } @placeholder {
       <div

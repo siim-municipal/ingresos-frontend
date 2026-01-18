@@ -1,52 +1,22 @@
 <div class="h-full flex flex-col gap-4">
+  @if (coordinates(); as coords) {
   <div
-    class="bg-blue-50 border border-blue-100 p-4 rounded-lg flex justify-between items-center"
+    class="h-[500px] w-full border border-slate-300 rounded-lg overflow-hidden relative"
   >
-    <div class="flex gap-8">
-      <div>
-        <span class="block text-xs font-bold text-blue-800 uppercase"
-          >Latitud</span
-        >
-        <span class="font-mono text-lg text-blue-900"
-          >{{ lat() || '---' }}</span
-        >
-      </div>
-      <div>
-        <span class="block text-xs font-bold text-blue-800 uppercase"
-          >Longitud</span
-        >
-        <span class="font-mono text-lg text-blue-900"
-          >{{ lon() || '---' }}</span
-        >
-      </div>
-    </div>
-
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="abrirGoogleMaps()"
-      [disabled]="!lat()"
-    >
-      <mat-icon>map</mat-icon> Ver en Google Maps Externo
-    </button>
-  </div>
-
-  <div
-    class="flex-1 bg-slate-100 rounded-lg border border-slate-300 relative overflow-hidden group min-h-[300px] flex items-center justify-center"
-  >
-    <div
-      class="absolute inset-0 opacity-10 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-cover"
-    ></div>
+    <lib-map [center]="coords" [zoom]="17" [label]="'Ubicación del Predio'" />
 
     <div
-      class="text-center z-10 p-6 bg-white/90 backdrop-blur rounded-xl shadow-sm"
+      class="absolute bottom-4 left-4 bg-white/90 p-2 rounded shadow text-xs z-[1000]"
     >
-      <mat-icon class="text-4xl text-slate-400 w-12 h-12">public</mat-icon>
-      <h3 class="text-slate-800 font-bold mt-2">Vista de Mapa Interactiva</h3>
-      <p class="text-slate-500 text-sm max-w-xs">
-        El módulo de cartografía (Leaflet/Mapbox) se integrará en el siguiente
-        sprint.
-      </p>
+      <strong>Lat:</strong> {{ coords[0] }} <br />
+      <strong>Lon:</strong> {{ coords[1] }}
     </div>
   </div>
+  } @else {
+  <div
+    class="h-64 bg-slate-100 flex items-center justify-center text-slate-500 rounded-lg"
+  >
+    <p>No hay coordenadas registradas para este predio.</p>
+  </div>
+  }
 </div>

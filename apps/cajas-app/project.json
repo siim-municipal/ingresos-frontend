@@ -19,6 +19,11 @@
             "glob": "**/*",
             "input": "apps/cajas-app/public"
           },
+          {
+            "glob": "**/*",
+            "input": "node_modules/leaflet/dist/images",
+            "output": "assets"
+          },
           "apps/cajas-app/src/assets"
         ],
         "stylePreprocessorOptions": {

@@ -4,6 +4,9 @@
 // Tipografía Google Fonts (Optimizar en index.html en prod)
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
+// Estilos para mapa usando leaflet
+@import 'leaflet/dist/leaflet.css';
+
 // Reset y Core de Angular Material
 @include mat.core();
 

@@ -12,6 +12,9 @@ export interface Predio {
   areaTerrenoM2?: number;
   areaConstruccionM2?: number;
 
+  latitud?: number;
+  longitud?: number;
+
   // Dirección
   calle?: string;
   numeroExterior?: string;
