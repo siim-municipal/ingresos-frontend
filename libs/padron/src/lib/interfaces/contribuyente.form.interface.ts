@@ -20,6 +20,11 @@ export interface ContribuyenteFormInterface {
   calle: FormControl<string>;
   email: FormControl<string>;
   telefonoMovil: FormControl<string>;
+
+  createdBy?: string;
+  createdAt?: string;
+  lastModifiedBy?: string;
+  lastModifiedAt?: string;
 }
 
 export interface CreateContribuyentePayload {

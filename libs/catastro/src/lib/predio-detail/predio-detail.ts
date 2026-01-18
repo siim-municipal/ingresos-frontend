@@ -16,6 +16,7 @@ import { Predio } from '../models/predio.model';
 import { PredioPropietarios } from './components/predio-propietarios/predio-propietarios';
 import { PredioHistorial } from './components/predio-historial/predio-historial';
 import { PredioUbicacion } from './components/predio-ubicacion/predio-ubicacion';
+import { AuditInfo } from '@gob-ui/components';
 
 @Component({
   selector: 'lib-predio-detail',
@@ -30,6 +31,7 @@ import { PredioUbicacion } from './components/predio-ubicacion/predio-ubicacion'
     PredioPropietarios,
     PredioHistorial,
     PredioUbicacion,
+    AuditInfo,
   ],
   templateUrl: './predio-detail.html',
   styleUrl: './predio-detail.scss',

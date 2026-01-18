@@ -25,8 +25,10 @@ export interface Predio {
   ultimoAnioPagado?: number;
 
   // Auditoría (Heredado de BaseEntity)
+  createdBy?: string;
   createdAt?: string;
-  updatedAt?: string;
+  lastModifiedBy?: string;
+  lastModifiedAt?: string;
 }
 
 // Interfaces auxiliares para la paginación de Spring Boot
