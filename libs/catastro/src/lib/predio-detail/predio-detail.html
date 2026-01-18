@@ -127,6 +127,37 @@
       </div>
       }
     </mat-tab>
+    <mat-tab label="Simulador de Cobro">
+      <div
+        class="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start animate-fade-in"
+      >
+        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+          <h3 class="text-lg font-bold text-slate-800 mb-4">
+            Calcular Impuesto
+          </h3>
+
+          <p class="text-sm text-slate-500 mb-6">
+            Seleccione el periodo a liquidar. Esta acción consultará el motor de
+            reglas fiscales (`ms-calculos`).
+          </p>
+
+          <div class="flex flex-col gap-4">
+            <button
+              mat-flat-button
+              color="accent"
+              (click)="ejecutarSimulacion()"
+            >
+              <mat-icon>play_circle</mat-icon>
+              Simular Respuesta Backend
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <lib-detalle-adeudo />
+        </div>
+      </div>
+    </mat-tab>
   </mat-tab-group>
   <div class="max-w-7xl mx-auto p-6 bg-white min-h-screen">
     <mat-tab-group> </mat-tab-group>

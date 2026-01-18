@@ -3,9 +3,7 @@ import {
   ChangeDetectionStrategy,
   inject,
   signal,
-  effect,
   input,
-  computed,
 } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +15,8 @@ import { PredioPropietarios } from './components/predio-propietarios/predio-prop
 import { PredioHistorial } from './components/predio-historial/predio-historial';
 import { PredioUbicacion } from './components/predio-ubicacion/predio-ubicacion';
 import { AuditInfo } from '@gob-ui/components';
+import { CalculoService } from '@gob-ui/fiscal';
+import { DetalleAdeudo } from '@gob-ui/fiscal';
 
 @Component({
   selector: 'lib-predio-detail',
@@ -32,6 +32,7 @@ import { AuditInfo } from '@gob-ui/components';
     PredioHistorial,
     PredioUbicacion,
     AuditInfo,
+    DetalleAdeudo,
   ],
   templateUrl: './predio-detail.html',
   styleUrl: './predio-detail.scss',
@@ -40,6 +41,7 @@ import { AuditInfo } from '@gob-ui/components';
 export class PredioDetail {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private calculoService = inject(CalculoService);
 
   // --- INPUTS (Data del Resolver) ---
   // Angular 16+ binder para data del router. "predio" coincide con la llave del resolve
@@ -75,6 +77,11 @@ export class PredioDetail {
       queryParamsHandling: 'merge', // Mantiene otros params si existieran
       replaceUrl: true, // Evita llenar el historial del navegador con cada click
     });
+  }
+
+  ejecutarSimulacion(): void {
+    const anioActual = new Date().getFullYear();
+    this.calculoService.calcularPredial(this.predio().id, anioActual);
   }
 
   goBack(): void {

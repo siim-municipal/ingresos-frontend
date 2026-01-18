@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+.row-concept {
+  @apply flex justify-between items-center py-2 text-sm border-b border-slate-50 last:border-0;
+}
+.skeleton-line {
+  @apply h-4 bg-slate-200 rounded animate-pulse;
+}
+
+/* Variantes de Texto */
+.text-discount {
+  @apply text-emerald-600 font-medium;
+}
+.text-penalty {
+  @apply text-red-600 font-medium;
+}
+.text-standard {
+  @apply text-slate-600;
+}
