@@ -1,4 +1,12 @@
-import { Component, OnInit, inject, OnDestroy, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  OnDestroy,
+  signal,
+  viewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subject, of } from 'rxjs';
@@ -33,6 +41,8 @@ export class ContribuyenteSearch implements OnInit, OnDestroy {
   // Form Control para el Input (Reactive Forms)
   searchControl = new FormControl('');
 
+  searchInput = viewChild<ElementRef>('inputSearch');
+
   isOpen = signal(false);
 
   // Control de suscripciones
@@ -40,6 +50,19 @@ export class ContribuyenteSearch implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupSearchStream();
+  }
+
+  focusInput(): void {
+    const el = this.searchInput()?.nativeElement;
+    if (el) {
+      el.focus();
+      el.select();
+
+      // Mejora: Si ya hay texto, aseguramos que el dropdown se muestre
+      if (this.searchControl.value) {
+        this.isOpen.set(true);
+      }
+    }
   }
 
   private setupSearchStream(): void {

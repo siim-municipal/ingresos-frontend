@@ -6,6 +6,27 @@
       <h2 class="text-xl font-bold text-slate-800">Padrón Catastral</h2>
       <p class="text-sm text-slate-500">Gestión de inventario de predios</p>
     </div>
+    <mat-form-field
+      appearance="outline"
+      class="w-full max-w-md subscript-sizing-dynamic"
+    >
+      <mat-label>Buscar predio (F2)</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+
+      <input
+        matInput
+        #searchInput
+        placeholder="Clave, propietario o ubicación..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="onSearch($event)"
+      />
+
+      @if (searchQuery()) {
+      <button mat-icon-button matSuffix (click)="onSearch('')">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
     <button mat-flat-button color="primary" class="rounded-lg">
       <mat-icon>add</mat-icon> Nuevo Predio
     </button>

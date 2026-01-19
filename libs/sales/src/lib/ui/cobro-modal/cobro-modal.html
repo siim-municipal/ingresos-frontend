@@ -1,0 +1,104 @@
+<div class="p-6 relative">
+  <h2
+    mat-dialog-title
+    class="!p-0 !mb-4 text-slate-800 flex justify-between items-center"
+  >
+    <span>Cobro de Caja</span>
+    <span class="text-sm font-normal text-slate-500 p-1"
+      >Folio: {{ data.folio }}</span
+    >
+  </h2>
+
+  <mat-dialog-content class="!p-0">
+    <div
+      class="bg-slate-100 p-4 rounded-lg mb-6 text-center border border-slate-200"
+    >
+      <p class="text-xs uppercase text-slate-500 font-bold tracking-wider">
+        Total a Pagar
+      </p>
+      <p class="text-4xl font-black text-slate-800">
+        {{ data.totalPagar | currency:'MXN' }}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Método de Pago</mat-label>
+        <mat-select
+          [value]="metodoPago()"
+          (selectionChange)="metodoPago.set($event.value)"
+        >
+          <mat-option value="EFECTIVO">Efectivo</mat-option>
+          <mat-option value="TARJETA">Tarjeta Débito/Crédito</mat-option>
+          <mat-option value="CHEQUE">Cheque Nominativo</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Monto Recibido</mat-label>
+        <span matPrefix class="text-slate-500 mr-1">$</span>
+        <input
+          matInput
+          type="number"
+          [ngModel]="montoRecibido()"
+          (ngModelChange)="montoRecibido.set($event)"
+          (keydown.enter)="intentarCobrar()"
+          cdkFocusInitial
+          min="0"
+          placeholder="0.00"
+        />
+      </mat-form-field>
+
+      @if (metodoPago() !== 'EFECTIVO') {
+      <mat-form-field
+        appearance="outline"
+        class="col-span-1 md:col-span-2 animate-fade-in"
+      >
+        <mat-label
+          >{{ metodoPago() === 'TARJETA' ? 'No. Autorización / Ref' : 'No.
+          Cheque' }}</mat-label
+        >
+        <input
+          matInput
+          [(ngModel)]="referencia"
+          placeholder="Ingrese los últimos 4 dígitos o autorización"
+        />
+      </mat-form-field>
+      }
+    </div>
+
+    @if (metodoPago() === 'EFECTIVO') {
+    <div
+      class="mt-2 p-3 rounded border flex justify-between items-center transition-colors duration-300"
+      [class.bg-green-50]="esCambioValido()"
+      [class.border-green-200]="esCambioValido()"
+      [class.bg-red-50]="!esCambioValido()"
+      [class.border-red-200]="!esCambioValido()"
+    >
+      <span class="font-bold text-slate-600">Cambio a entregar:</span>
+      <span
+        class="text-2xl font-bold"
+        [class.text-green-700]="esCambioValido()"
+        [class.text-red-700]="!esCambioValido()"
+      >
+        {{ cambio() | currency:'MXN' }}
+      </span>
+    </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="!pt-6 !pb-0 !px-0 gap-2">
+    <button mat-stroked-button color="warn" (click)="cancelar()">
+      Cancelar (ESC)
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!esFormularioValido()"
+      (click)="confirmarCobro()"
+      class="!h-12 !px-8 !text-lg"
+    >
+      <mat-icon>print</mat-icon> Cobrar (Enter)
+    </button>
+  </mat-dialog-actions>
+</div>

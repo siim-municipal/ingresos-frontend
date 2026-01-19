@@ -75,10 +75,14 @@
     </div>
 
     <div class="grid grid-cols-2 gap-4 mt-6">
-      <button mat-stroked-button color="warn" (click)="store.clearCart()">
-        Limpiar
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="limpiarCarritoConConfirmacion()"
+      >
+        Limpiar (F4)
       </button>
-      <button mat-flat-button color="primary" (click)="procesarPago()">
+      <button mat-flat-button color="primary" (click)="abrirModalCobro()">
         Cobrar (F10)
       </button>
     </div>
