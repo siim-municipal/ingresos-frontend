@@ -6,6 +6,12 @@ import { authConfig } from './auth.config';
 import { UserProfile } from '@gob-ui/shared/interfaces';
 import { FeedbackService } from '@gob-ui/shared/services';
 
+interface CustomJwtPayload {
+  sub: string;
+  municipio_id: string; // ✅ El campo que mencionaste
+  // ... otros claims (roles, exp, iat)
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -120,6 +126,24 @@ export class AuthService {
       } as UserProfile;
 
       this._currentUser.set(combinedClaims);
+    }
+  }
+
+  /**
+   * Obtiene el Alias o ID del municipio desde el Token actual.
+   * Retorna 'TUXTEPEC' (u otro default) si no encuentra el claim, para evitar bloqueos.
+   */
+  getMunicipioContext(): string {
+    const token = this.getAccessToken();
+    if (!token) return 'TUXTEPEC'; // Fallback seguro
+
+    try {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      // Retornamos el valor del token, o el default si viene nulo
+      return decoded.municipio_id || 'TUXTEPEC';
+    } catch (e) {
+      console.warn('Error decodificando token para contexto municipio', e);
+      return 'TUXTEPEC';
     }
   }
 }

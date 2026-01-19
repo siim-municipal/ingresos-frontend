@@ -18,11 +18,19 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CobroModalComponent, CobroResult } from '../cobro-modal/cobro-modal';
+import { PaymentOrchestratorService } from '../../services/payment-orchestrator.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'lib-resumen-carrito',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatBadgeModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatBadgeModule,
+    MatProgressSpinnerModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resumen-carrito.html',
   styleUrl: './resumen-carrito.scss',
@@ -32,7 +40,9 @@ export class ResumenCarrito implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private hotkeys = inject(HotkeysService);
   private feedback = inject(FeedbackService);
+  private paymentOrchestrator = inject(PaymentOrchestratorService);
   private sub = new Subscription();
+  isProcessing = this.paymentOrchestrator.isProcessing;
 
   abrirModalCobro(): void {
     if (this.store.items().length === 0) {
@@ -71,14 +81,7 @@ export class ResumenCarrito implements OnInit, OnDestroy {
   }
 
   procesarPagoFinal(datosPago: CobroResult): void {
-    console.log('Iniciando flujo de pago con items:', this.store.items());
-    this.store.clearCart();
-    const cambio = datosPago.cambio || 0;
-    this.feedback.success(
-      `Referencia: ${datosPago.referencia || 'N/A'} - Cambio: $${cambio.toFixed(2)}`,
-    );
-
-    // TODO: Navegar a pantalla de impresión de ticket o recargar dashboard
+    this.paymentOrchestrator.procesarTransaccion(datosPago);
   }
 
   ngOnInit(): void {

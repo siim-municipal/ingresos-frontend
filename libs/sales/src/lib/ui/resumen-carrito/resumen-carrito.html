@@ -79,11 +79,19 @@
         mat-stroked-button
         color="warn"
         (click)="limpiarCarritoConConfirmacion()"
+        [disabled]="isProcessing()"
       >
         Limpiar (F4)
       </button>
-      <button mat-flat-button color="primary" (click)="abrirModalCobro()">
-        Cobrar (F10)
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="abrirModalCobro()"
+        [disabled]="isProcessing()"
+      >
+        @if (isProcessing()) {
+        <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+        Procesando... } @else { Cobrar (F10) }
       </button>
     </div>
   </div>
