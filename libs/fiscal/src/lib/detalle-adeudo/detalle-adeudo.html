@@ -27,12 +27,44 @@
         <div class="skeleton-line w-1/2 h-8"></div>
       </div>
     </div>
+    } @if (errorType() === 'REQUIERE_VALUACION') {
+    <div
+      class="flex flex-col items-center justify-center py-8 px-4 text-center animate-fade-in"
+    >
+      <div
+        class="bg-amber-50 text-amber-600 p-4 rounded-full mb-4 shadow-sm border border-amber-100"
+      >
+        <mat-icon class="scale-150">assignment_late</mat-icon>
+      </div>
+
+      <h4 class="text-slate-800 font-bold text-lg mb-2">Valuación Requerida</h4>
+
+      <p class="text-sm text-slate-500 mb-6 max-w-[260px] leading-relaxed">
+        Este predio existe pero
+        <strong>no tiene valores catastrales</strong> asignados para el
+        ejercicio fiscal actual.
+      </p>
+
+      <a
+        mat-flat-button
+        color="accent"
+        class="w-full rounded-lg"
+        [routerLink]="['/catastro/predios', predioId()]"
+      >
+        <mat-icon>engineering</mat-icon>
+        Ir al Módulo de Catastro
+      </a>
+    </div>
     } @else if (error()) {
     <div class="flex flex-col items-center justify-center py-6 text-center">
       <div class="bg-red-50 text-red-600 p-3 rounded-full mb-3">
         <mat-icon>error_outline</mat-icon>
       </div>
       <p class="text-sm text-slate-600">{{ error() }}</p>
+
+      <button mat-button color="warn" (click)="reintentar()" class="mt-2">
+        Reintentar
+      </button>
     </div>
     } @else if (data(); as cuenta) {
 

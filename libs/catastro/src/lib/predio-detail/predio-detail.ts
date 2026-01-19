@@ -15,8 +15,9 @@ import { PredioPropietarios } from './components/predio-propietarios/predio-prop
 import { PredioHistorial } from './components/predio-historial/predio-historial';
 import { PredioUbicacion } from './components/predio-ubicacion/predio-ubicacion';
 import { AuditInfo } from '@gob-ui/components';
-import { CalculoService } from '@gob-ui/fiscal';
+import { CalculoService, SolicitudCalculo } from '@gob-ui/fiscal';
 import { DetalleAdeudo } from '@gob-ui/fiscal';
+import { TaxConcept } from '@gob-ui/fiscal';
 
 @Component({
   selector: 'lib-predio-detail',
@@ -81,7 +82,15 @@ export class PredioDetail {
 
   ejecutarSimulacion(): void {
     const anioActual = new Date().getFullYear();
-    this.calculoService.calcularPredial(this.predio().id, anioActual);
+    const payload: SolicitudCalculo = {
+      referenciaId: this.predio().id,
+      cantidad: 1,
+      claveConcepto: TaxConcept.PREDIAL_URBANO,
+      anioFiscal: anioActual,
+      baseCalculo: undefined,
+      parametrosExtra: undefined,
+    };
+    this.calculoService.calcularPredial(payload);
   }
 
   goBack(): void {

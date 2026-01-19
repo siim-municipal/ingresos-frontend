@@ -1,0 +1,87 @@
+@if (store.hasItems()) {
+<div
+  class="fixed bottom-0 right-0 w-full md:w-96 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-slate-200 z-50 transition-transform duration-300"
+  [class.translate-y-0]="store.isOpen()"
+  [class.translate-y-[calc(100%-4rem)]]="!store.isOpen()"
+>
+  <button
+    type="button"
+    class="w-full h-16 px-6 flex items-center justify-between bg-slate-800 text-white cursor-pointer hover:bg-slate-700 transition-colors border-none p-0"
+    (click)="store.toggleCart()"
+  >
+    <div class="flex items-center gap-3">
+      <mat-icon [matBadge]="store.count()" matBadgeColor="accent"
+        >shopping_bag</mat-icon
+      >
+      <span class="font-bold text-lg">Resumen de Cobro</span>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span class="font-mono text-xl font-bold"
+        >{{ store.totalGeneral() | currency:'MXN' }}</span
+      >
+      <mat-icon class="transition-transform" [class.rotate-180]="store.isOpen()"
+        >expand_less</mat-icon
+      >
+    </div>
+  </button>
+
+  <div class="p-6 max-h-[60vh] overflow-y-auto bg-slate-50">
+    <div class="space-y-3 mb-6">
+      @for (item of store.items(); track item.folio) {
+      <div
+        class="flex justify-between items-start p-3 bg-white rounded-lg border border-slate-200 shadow-sm animate-fade-in"
+      >
+        <div class="flex flex-col">
+          <span class="font-bold text-slate-700 text-sm"
+            >{{ item.listaConceptos[0].descripcion }}</span
+          >
+          <span class="text-xs text-slate-400 font-mono">{{ item.folio }}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-mono font-medium text-slate-800"
+            >{{ item.granTotal | currency:'MXN' }}</span
+          >
+          <button
+            mat-icon-button
+            color="warn"
+            class="scale-75"
+            (click)="removeItem($event, item.folio)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div
+      class="border-t border-slate-200 pt-4 space-y-2 text-sm text-slate-600"
+    >
+      <div class="flex justify-between">
+        <span>Impuestos / Derechos:</span>
+        <span>{{ store.impuestosTotal() | currency:'MXN' }}</span>
+      </div>
+      <div class="flex justify-between text-red-600">
+        <span>Recargos Totales:</span>
+        <span>{{ store.recargosTotal() | currency:'MXN' }}</span>
+      </div>
+      <div
+        class="flex justify-between font-bold text-lg text-slate-900 mt-4 pt-2 border-t border-slate-300"
+      >
+        <span>Total a Cobrar:</span>
+        <span>{{ store.totalGeneral() | currency:'MXN' }}</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mt-6">
+      <button mat-stroked-button color="warn" (click)="store.clearCart()">
+        Limpiar
+      </button>
+      <button mat-flat-button color="primary" (click)="procesarPago()">
+        Cobrar (F10)
+      </button>
+    </div>
+  </div>
+</div>
+}

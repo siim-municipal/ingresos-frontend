@@ -1,4 +1,4 @@
-<div class="flex h-screen flex-col">
+<div class="flex h-screen flex-col relative">
   <mat-toolbar color="primary" class="z-20 shadow-md relative px-4">
     @if (isMobile()) {
     <button mat-icon-button (click)="sidenav.toggle()" class="mr-2">
@@ -91,6 +91,8 @@
         </a>
         <span #rlaDashboard="routerLinkActive" routerLinkActive></span>
 
+        <mat-divider class="my-2"></mat-divider>
+
         <a
           mat-list-item
           routerLink="/ingresos"
@@ -152,10 +154,12 @@
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content class="p-6 overflow-auto">
+    <mat-sidenav-content class="p-6 pb-28 overflow-auto">
       <div class="max-w-7xl mx-auto">
         <router-outlet></router-outlet>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
+
+  <lib-resumen-carrito />
 </div>
