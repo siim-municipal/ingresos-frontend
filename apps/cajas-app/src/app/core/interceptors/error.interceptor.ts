@@ -1,15 +1,22 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, timeout } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
 import { FeedbackService } from '@gob-ui/shared/services';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const feedback = inject(FeedbackService);
 
+  const snackBar = inject(MatSnackBar);
+  const TIMEOUT_MS = 15000;
+
   return next(req).pipe(
+    timeout(TIMEOUT_MS),
     catchError((error: HttpErrorResponse) => {
+      const userMessage = 'Ocurrió un error desconocido.';
+      const isNetworkError = false;
       // LOGICA DE NEGOCIO POR STATUS CODE
       if (error.error instanceof ErrorEvent) {
         feedback.error('Error del navegador', error.error.message);
@@ -69,6 +76,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           default:
             feedback.error('Error inesperado', error.message);
         }
+      }
+
+      if (isNetworkError) {
+        snackBar.open(userMessage, 'CERRAR', {
+          duration: 5000,
+          panelClass: ['snackbar-error'], // Clase CSS global
+        });
       }
 
       // Propagamos el error para que el componente también se entere

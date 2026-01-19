@@ -96,6 +96,9 @@ export class PaymentOrchestratorService {
         'El recibo se ha generado correctamente.',
       );
 
+      const totalCobrado = items.reduce((sum, item) => sum + item.granTotal, 0);
+      this.cajaStore.registrarVenta(totalCobrado);
+
       this.store.clearCart(); // Limpieza estado local
       if (ultimoReciboId) {
         console.log('Navegando a recibo:', ultimoReciboId);

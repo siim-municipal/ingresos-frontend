@@ -8,7 +8,9 @@ export interface CajaState {
   sesionId: string | null;
   isOpen: boolean;
   montoApertura: number;
+  totalVendido: number;
   cajasDisponibles: CajaCatalogo[];
+  isLoading: boolean;
 }
 
 export interface CajaCatalogo {
@@ -19,10 +21,12 @@ export interface CajaCatalogo {
 }
 
 const initialState: CajaState = {
-  sesionId: localStorage.getItem('caja_sesion_id'), // Persistencia básica
-  isOpen: !!localStorage.getItem('caja_sesion_id'),
+  sesionId: localStorage.getItem('sesion_caja_id'),
+  isOpen: !!localStorage.getItem('sesion_caja_id'),
   montoApertura: 0,
+  totalVendido: 0, // Inicia en 0
   cajasDisponibles: [],
+  isLoading: false,
 };
 
 export const CajaStore = signalStore(
@@ -75,6 +79,26 @@ export const CajaStore = signalStore(
             patchState(store, { sesionId: null, isOpen: false });
           }),
         );
+      },
+
+      registrarVenta: (monto: number): void => {
+        patchState(store, (state) => ({
+          totalVendido: state.totalVendido + monto,
+        }));
+      },
+
+      cerrarSesionLocal: (): void => {
+        // 1. Limpiar Storage
+        localStorage.removeItem('sesion_caja_id');
+
+        // 2. Resetear Estado a valores iniciales
+        patchState(store, {
+          sesionId: null,
+          isOpen: false,
+          montoApertura: 0,
+          totalVendido: 0,
+          isLoading: false,
+        });
       },
 
       // Método para recuperar sesión al recargar página (opcional, validar con backend si sigue viva)

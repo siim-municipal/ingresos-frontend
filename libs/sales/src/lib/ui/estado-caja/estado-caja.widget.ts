@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { CajaStore } from '../../stores/caja.store';
 import { AperturaCajaDialog } from '../apertura-caja/apertura-caja.dialog';
-import { FeedbackService } from '@gob-ui/shared/services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-estado-caja-widget',
@@ -16,7 +16,7 @@ import { FeedbackService } from '@gob-ui/shared/services';
 export class EstadoCajaWidget {
   store = inject(CajaStore);
   private dialog = inject(MatDialog);
-  private feedback = inject(FeedbackService);
+  private router = inject(Router);
 
   abrirModal(): void {
     this.dialog.open(AperturaCajaDialog, {
@@ -27,12 +27,7 @@ export class EstadoCajaWidget {
 
   cerrarSesion(): void {
     if (confirm('¿Seguro que desea realizar el corte y cerrar sesión?')) {
-      this.store.cerrarCaja().subscribe(() => {
-        this.feedback.info(
-          'Sesión Cerrada',
-          'Se ha generado el corte de caja.',
-        );
-      });
+      this.router.navigate(['/caja/corte']);
     }
   }
 }

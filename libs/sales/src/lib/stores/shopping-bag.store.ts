@@ -22,36 +22,50 @@ const initialState: ShoppingBagState = {
   isOpen: false,
 };
 
+/**
+ * Helper para sumar montos monetarios evitando errores de punto flotante.
+ * Ejemplo: 0.1 + 0.2 = 0.3 (en lugar de 0.300000004)
+ */
+const safeSum = (items: CartItem[], field: keyof CartItem): number => {
+  const totalCentavos = items.reduce((acc, item) => {
+    const valor = Number(item[field]) || 0;
+    return acc + Math.round(valor * 100);
+  }, 0);
+  return totalCentavos / 100;
+};
+
 export const ShoppingBagStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
 
   withComputed(({ items }) => ({
     count: computed(() => items().length),
-    totalGeneral: computed(() =>
-      items().reduce((acc, item) => acc + item.granTotal, 0),
-    ),
-    impuestosTotal: computed(() =>
-      items().reduce((acc, item) => acc + item.subtotal, 0),
-    ),
-    recargosTotal: computed(() =>
-      items().reduce((acc, item) => acc + item.totalRecargos, 0),
-    ),
+
+    totalGeneral: computed(() => safeSum(items(), 'granTotal')),
+    impuestosTotal: computed(() => safeSum(items(), 'subtotal')),
+    recargosTotal: computed(() => safeSum(items(), 'totalRecargos')),
+
     hasItems: computed(() => items().length > 0),
   })),
 
   withMethods((store) => {
     const platformId = inject(PLATFORM_ID);
-
     const feedback = inject(FeedbackService);
 
     return {
       addItem(item: CartItemInput): void {
         const currentItems = store.items();
 
-        if (currentItems.some((i) => i.folio === item.folio)) {
+        // ✅ MEJORA: Validación por UUID (predioId) es más segura que por Folio
+        const exists = currentItems.some(
+          (i) =>
+            (item['predioId'] && i['predioId'] === item['predioId']) ||
+            i.folio === item.folio,
+        );
+
+        if (exists) {
           feedback.warning(
-            `El folio ${item['folio']} ya se encuentra en el carrito.`,
+            `El predio con folio ${item.folio} ya está en el carrito.`,
           );
           return;
         }
@@ -65,42 +79,49 @@ export const ShoppingBagStore = signalStore(
           items: [...currentItems, newItem],
           isOpen: true,
         });
+
+        // Feedback visual amigable
         const conceptos = item.listaConceptos;
         const nombreConcepto =
           Array.isArray(conceptos) && conceptos.length > 0
             ? conceptos[0].descripcion
             : 'Concepto General';
 
-        feedback.success(`${nombreConcepto} se agregó correctamente.`);
+        feedback.success(`Agregado: ${nombreConcepto}`);
       },
 
-      removeItem(folio: string): void {
+      removeItem(identificador: string): void {
+        // Permite borrar por predioId (ideal) o folio (fallback)
         patchState(store, (state) => ({
-          items: state.items.filter((i) => i.folio !== folio),
+          items: state.items.filter(
+            (i) => i['predioId'] !== identificador && i.folio !== identificador,
+          ),
         }));
-        feedback.info('Se ha quitado el concepto del carrito.');
+        feedback.info('Concepto eliminado del carrito.');
       },
 
       clearCart(): void {
         if (store.items().length === 0) return;
         patchState(store, { items: [] });
-        feedback.info('Se han eliminado todos los conceptos.');
+        // No mostramos mensaje aquí porque suele usarse tras un cobro exitoso
       },
 
       toggleCart(): void {
         patchState(store, (state) => ({ isOpen: !state.isOpen }));
       },
 
+      // Método interno para hidratar el estado
       _loadFromStorage(): void {
         if (isPlatformBrowser(platformId)) {
-          const stored = sessionStorage.getItem(STORAGE_KEY);
+          // ✅ MEJORA: Usamos localStorage para persistencia real
+          const stored = localStorage.getItem(STORAGE_KEY);
           if (stored) {
             try {
               const items = JSON.parse(stored) as CartItem[];
               patchState(store, { items });
             } catch (e) {
-              console.error('Error corrupt shopping bag data', e);
-              sessionStorage.removeItem(STORAGE_KEY);
+              console.error('Error al leer el carrito local', e);
+              localStorage.removeItem(STORAGE_KEY);
             }
           }
         }
@@ -110,12 +131,16 @@ export const ShoppingBagStore = signalStore(
 
   withHooks({
     onInit(store) {
+      // 1. Cargar estado guardado
       store._loadFromStorage();
+
       const platformId = inject(PLATFORM_ID);
+
+      // 2. Sincronizar cambios automáticamente
       effect(() => {
         const items = store.items();
         if (isPlatformBrowser(platformId)) {
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
         }
       });
     },
