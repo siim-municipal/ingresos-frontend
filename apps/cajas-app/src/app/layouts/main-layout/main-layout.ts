@@ -19,7 +19,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { HasRoleDirective } from '../../shared/directives/has-role';
-import { ResumenCarrito } from '@gob-ui/sales';
+import { ResumenCarrito, EstadoCajaWidget } from '@gob-ui/sales';
 
 @Component({
   selector: 'app-main-layout',
@@ -38,6 +38,7 @@ import { ResumenCarrito } from '@gob-ui/sales';
     MatDividerModule,
     HasRoleDirective,
     ResumenCarrito,
+    EstadoCajaWidget,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',

@@ -48,22 +48,12 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('@gob-ui/catastro').then((m) => m.catastroRoutes),
       },
-
-      // C. Módulo Ingresos (Protegido por Rol)
-      // {
-      //   path: 'ingresos',
-      //   canActivate: [roleGuard],
-      //   data: { roles: ['TESORERO', 'ADMIN'] },
-      //   component: GobButtonComponent,
-      // },
-
-      // D. Configuración
-      // {
-      //   path: 'configuracion',
-      //   canActivate: [roleGuard],
-      //   data: { roles: ['ADMIN'] },
-      //   component: GobButtonComponent,
-      // },
+      {
+        path: 'caja',
+        canActivate: [roleGuard],
+        data: { roles: ['TESORERO', 'CAJERO'] },
+        loadChildren: () => import('@gob-ui/sales').then((m) => m.salesRoutes),
+      },
 
       // Redirección por defecto interna
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

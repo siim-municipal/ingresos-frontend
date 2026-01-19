@@ -1,14 +1,15 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize, tap, catchError, throwError } from 'rxjs';
 import { CobroResult } from '../ui/cobro-modal/cobro-modal';
 import { ShoppingBagStore } from '../stores/shopping-bag.store';
 import { FeedbackService } from '@gob-ui/shared/services';
 import {
+  IngresoResponse,
   IntencionPagoRequest,
   TesoreriaApiService,
 } from './tesoreria-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CajaStore } from '../stores/caja.store';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentOrchestratorService {
@@ -16,6 +17,7 @@ export class PaymentOrchestratorService {
   private store = inject(ShoppingBagStore);
   private router = inject(Router);
   private feedback = inject(FeedbackService);
+  private cajaStore = inject(CajaStore);
 
   // Estado reactivo de bloqueo
   private _isProcessing = signal(false);
@@ -28,6 +30,16 @@ export class PaymentOrchestratorService {
   async procesarTransaccion(cobroData: CobroResult): Promise<void> {
     // 1. Check de Seguridad (Doble Clic)
     if (this._isProcessing()) {
+      return;
+    }
+
+    // VALIDACIÓN CRÍTICA DE NEGOCIO
+    const sesionId = this.cajaStore.sesionId();
+    if (!this.cajaStore.isOpen() || !sesionId) {
+      this.feedback.error(
+        'Caja Cerrada',
+        'Debe abrir una sesión de caja antes de cobrar.',
+      );
       return;
     }
 
@@ -46,28 +58,35 @@ export class PaymentOrchestratorService {
 
       // Validamos que haya items
       if (items.length === 0) throw new Error('El carrito está vacío');
+      let ultimoReciboId = '';
 
       // Simulamos procesamiento secuencial (Si el backend no soporta Bulk)
       for (const item of items) {
+        const contribuyenteDelItem =
+          (item['contribuyenteId'] as string) ||
+          '00000000-0000-0000-0000-000000000000';
         const payload: IntencionPagoRequest = {
           paymentRequestUUID: crypto.randomUUID(), // IDEMPOTENCIA: Generado en cliente
-          contribuyenteId:
-            (item['contribuyenteId'] as string) || 'ANONYMOUS-UUID', // Debería venir del item o sesión
-          sesionCajaId: 'caja-sesion-actual-uuid', // Idealmente inyectado desde un AuthService
-          claveConcepto: 'IMP_PREDIAL_URBANO', // TODO Debería mapearse del item.clave
+          contribuyenteId: contribuyenteDelItem, // Debería venir del item o sesión
+          sesionCajaId: sesionId, // Idealmente inyectado desde un AuthService
+          claveConcepto:
+            (item['claveConcepto'] as string) || 'IMP_PREDIAL_URBANO',
           montoTotal: item.granTotal,
-          referenciaId: item.folio, // UUID del Predio
+          referenciaId: item['predioId'] as string, // UUID del Predio
           anioFiscal: new Date().getFullYear(), // O el del item
         };
 
         // 4. Consumo de API
         // Convertimos Observable a Promise para usar await limpio en el for-loop
-        await new Promise((resolve, reject) => {
-          this.api.procesarPago(payload).subscribe({
-            next: (res) => resolve(res),
-            error: (err) => reject(err),
-          });
-        });
+        const respuestaBackend = await new Promise<IngresoResponse>(
+          (resolve, reject) => {
+            this.api.procesarPago(payload).subscribe({
+              next: (res) => resolve(res),
+              error: (err) => reject(err),
+            });
+          },
+        );
+        ultimoReciboId = respuestaBackend.id;
       }
 
       // 5. Éxito
@@ -78,7 +97,13 @@ export class PaymentOrchestratorService {
       );
 
       this.store.clearCart(); // Limpieza estado local
-      this.router.navigate(['/caja/recibo/ultimo']); // Redirección
+      if (ultimoReciboId) {
+        console.log('Navegando a recibo:', ultimoReciboId);
+        this.router.navigate(['/caja/recibos', ultimoReciboId]);
+      } else {
+        // Fallback si algo raro pasó
+        this.router.navigate(['/caja']);
+      }
     } catch (error: unknown) {
       // 6. Manejo de Errores
       this.feedback.dismiss(loadingToastId);

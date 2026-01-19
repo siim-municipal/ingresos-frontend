@@ -8,6 +8,7 @@ import {
 } from '../models/contribuyente.dto';
 import { API_BASE_URL } from '@gob-ui/shared/services';
 import { CreateContribuyentePayload } from '../interfaces/contribuyente.form.interface';
+import { PropiedadPredio } from '../interfaces/contribuyente.predio.interface';
 interface PageResponse<T> {
   content: T[];
   totalElements: number;
@@ -152,6 +153,24 @@ export class ContribuyenteApiService {
     return this.http
       .post<BackendSujetoDTO>(this.apiUrl, payloadBackend)
       .pipe(map((response) => this.mapBackendToFrontend(response)));
+  }
+
+  /**
+   * Obtiene la lista de propietarios/poseedores de un predio específico.
+   * @param predioId UUID del predio
+   */
+  getPropietariosPorPredio(predioId: string): Observable<PropiedadPredio[]> {
+    return this.http
+      .get<
+        PropiedadPredio[]
+      >(`${this.baseUrl}/v1/propiedades/por-predio/${predioId}`)
+      .pipe(
+        // Manejo de error básico para que no rompa el flujo si falla la red
+        catchError((err) => {
+          console.error('Error obteniendo propietarios', err);
+          return of([]); // Retorna array vacío en caso de error
+        }),
+      );
   }
 
   // TODO hacer un mapper en otra clase

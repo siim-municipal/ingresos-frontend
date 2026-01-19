@@ -1,0 +1,51 @@
+<h2 mat-dialog-title class="flex items-center gap-2">
+  <mat-icon class="text-blue-600">point_of_sale</mat-icon>
+  Apertura de Caja
+</h2>
+
+<mat-dialog-content class="flex flex-col gap-4 pt-4">
+  <p class="text-slate-500 text-sm">
+    Seleccione su punto de venta e ingrese el fondo fijo.
+  </p>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Seleccionar Caja</mat-label>
+    <mat-select [(ngModel)]="selectedCajaId">
+      @for (caja of store.cajasDisponibles(); track caja.id) {
+      <mat-option [value]="caja.id">
+        {{ caja.nombre }}
+        <span class="text-xs text-slate-400">({{ caja.ubicacion }})</span>
+      </mat-option>
+      } @if (store.cajasDisponibles().length === 0) {
+      <mat-option disabled>Cargando cajas...</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Monto de Apertura</mat-label>
+    <span matPrefix class="text-slate-500 mr-1">$</span>
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="monto"
+      min="0"
+      placeholder="0.00"
+    />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="!selectedCajaId() || monto() < 0 || loading()"
+    (click)="confirmar()"
+  >
+    @if (loading()) {
+    <span class="animate-spin mr-2">⏳</span> Abriendo... } @else { Abrir Sesión
+    }
+  </button>
+</mat-dialog-actions>
