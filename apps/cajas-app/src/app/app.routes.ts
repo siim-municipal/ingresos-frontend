@@ -54,6 +54,12 @@ export const appRoutes: Route[] = [
         data: { roles: ['TESORERO', 'CAJERO'] },
         loadChildren: () => import('@gob-ui/sales').then((m) => m.salesRoutes),
       },
+      {
+        path: 'agua',
+        canActivate: [roleGuard],
+        data: { roles: ['TESORERO', 'CAJERO'] },
+        loadChildren: () => import('@gob-ui/agua').then((m) => m.aguaRoutes),
+      },
 
       // Redirección por defecto interna
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

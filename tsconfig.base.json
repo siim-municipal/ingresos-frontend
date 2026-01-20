@@ -21,7 +21,8 @@
       "@gob-ui/shared/services": ["libs/shared/services/src/index.ts"],
       "@gob-ui/catastro": ["libs/catastro/src/index.ts"],
       "@gob-ui/fiscal": ["libs/fiscal/src/index.ts"],
-      "@gob-ui/sales": ["libs/sales/src/index.ts"]
+      "@gob-ui/sales": ["libs/sales/src/index.ts"],
+      "@gob-ui/agua": ["libs/agua/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

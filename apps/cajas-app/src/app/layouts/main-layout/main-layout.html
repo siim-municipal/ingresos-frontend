@@ -147,6 +147,18 @@
 
         <button
           mat-list-item
+          *gobHasRole="['CAJERO', 'TESORERO']"
+          routerLink="/agua"
+          routerLinkActive="bg-blue-50 text-blue-700 border-r-4 border-blue-600"
+        >
+          <mat-icon matListItemIcon class="text-slate-500">water_pump</mat-icon>
+          <span>Agua</span>
+        </button>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <button
+          mat-list-item
           *gobHasRole="['ADMIN']"
           routerLink="/ingresos"
           routerLinkActive="bg-blue-50 text-blue-700 border-r-4 border-blue-600"

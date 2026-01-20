@@ -4,4 +4,6 @@ export * from './lib/predio-list/predio-list';
 
 export * from './lib/services/predio.service';
 
+export * from './lib/ui/predio-search/predio-search';
+
 export * from './lib/catastro.routes';

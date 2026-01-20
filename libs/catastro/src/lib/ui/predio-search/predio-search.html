@@ -1,0 +1,34 @@
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Buscar Predio (Clave o Propietario)</mat-label>
+  <input
+    matInput
+    [formControl]="searchControl"
+    [matAutocomplete]="auto"
+    placeholder="Ej. URB-001 o Juan Perez"
+  />
+
+  <div matSuffix class="flex items-center">
+    @if (isLoading()) {
+    <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+    <mat-icon>search</mat-icon>
+    }
+  </div>
+
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayFn"
+    (optionSelected)="onSelect($event.option.value)"
+  >
+    @for (predio of resultados(); track predio.id) {
+    <mat-option [value]="predio">
+      <div class="flex flex-col py-1">
+        <span class="font-bold text-sm">{{ predio.claveCatastral }}</span>
+        <span class="text-xs text-slate-500">{{ 'Sin Propietario' }}</span>
+      </div>
+    </mat-option>
+    } @if (resultados().length === 0 && searchControl.value && !isLoading()) {
+    <mat-option disabled>No se encontraron resultados</mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>

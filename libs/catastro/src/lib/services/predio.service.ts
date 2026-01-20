@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { API_BASE_URL, FeedbackService } from '@gob-ui/shared/services';
 import {
   PageResponse,
@@ -52,6 +52,22 @@ export class PredioService {
         this.feedBack.error('Error al obtener Predio', `Detalles: ${error}`);
         throw error;
       }),
+    );
+  }
+
+  buscarPredios(query: string): Observable<Predio[]> {
+    // Reutilizamos findAll pero pedimos solo la primera página con 10 resultados
+    const params: PredioTableParams = {
+      page: 0,
+      size: 10,
+      sort: 'claveCatastral,asc',
+      search: query, // Pasamos lo que escribe el usuario
+    };
+
+    return this.findAll(params).pipe(
+      // Transformamos PageResponse<Predio> a Predio[]
+      map((response) => response.content),
+      catchError(() => of([])), // Si falla, retorna array vacío
     );
   }
 }
