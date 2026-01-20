@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, computed } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -101,10 +101,39 @@ export class ContratoAguaForm {
   // --- ACTIONS ---
 
   onPredioSelected(predio: Predio): void {
-    // Aquí podríamos validar preventivamente si el predio ya tiene contrato
-    // llamando a un endpoint ligero, o dejar que el submit final lo valide.
-    this.predioSeleccionado.set(predio);
-    this.feedback.info(`Predio seleccionado: ${predio.claveCatastral}`);
+    // 1. Bloqueamos UI para que el usuario sepa que estamos validando
+    this.isLoading.set(true);
+
+    // 2. Consultamos al backend
+    this.aguaService.verificarExistenciaContrato(predio.id).subscribe({
+      next: (existe) => {
+        this.isLoading.set(false);
+
+        if (existe) {
+          // ESCENARIO A: YA TIENE CONTRATO
+          this.feedback.warning(
+            'Predio con Contrato',
+            `El predio ${predio.claveCatastral} ya tiene un servicio de agua activo. No se puede crear uno nuevo.`,
+          );
+          // TODO: redirigir al detalle del contrato existente
+          // this.router.navigate(['/agua/contratos/detalle', predio.id]);
+
+          this.limpiarSeleccion();
+        } else {
+          // ESCENARIO B: ESTÁ LIBRE
+          this.predioSeleccionado.set(predio);
+          this.feedback.info(`Predio seleccionado: ${predio.claveCatastral}`);
+        }
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        console.error(err);
+        this.feedback.error(
+          'Error de Validación',
+          'No pudimos verificar el estado del predio. Intente de nuevo.',
+        );
+      },
+    });
   }
 
   limpiarSeleccion(): void {
@@ -129,7 +158,7 @@ export class ContratoAguaForm {
       predioId: this.predioSeleccionado()!.id,
       tipoToma: formValue.tipoToma,
       esServicioMedido: formValue.esServicioMedido,
-      numeroSerieMedidor: formValue.numeroSerieMedidor || undefined,
+      numeroMedidor: formValue.numeroSerieMedidor || undefined,
       lecturaInicial: formValue.lecturaInicial,
       observaciones: formValue.observaciones || undefined,
     };

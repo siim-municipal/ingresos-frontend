@@ -4,6 +4,8 @@ import {
   inject,
   signal,
   input,
+  OnDestroy,
+  effect,
 } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,20 +41,26 @@ import { TaxConcept } from '@gob-ui/fiscal';
   styleUrl: './predio-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PredioDetail {
+export class PredioDetail implements OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private calculoService = inject(CalculoService);
-
-  // --- INPUTS (Data del Resolver) ---
-  // Angular 16+ binder para data del router. "predio" coincide con la llave del resolve
   predio = input.required<Predio>();
 
-  // --- ESTADO DE TABS ---
-  readonly tabKeys = ['general', 'propietarios', 'historial', 'ubicacion'];
+  // ESTADO DE TABS
+  readonly tabKeys = [
+    'general',
+    'propietarios',
+    'historial',
+    'ubicacion',
+    'simulacion',
+  ];
   selectedTabIndex = signal(0);
 
   constructor() {
+    effect(() => {
+      this.calculoService.resetCalculo();
+    });
     // Sincronizar URL -> Tab al iniciar
     // Leemos el query param una sola vez o reaccionamos a él
     this.route.queryParams.subscribe((params) => {
@@ -87,7 +95,7 @@ export class PredioDetail {
       cantidad: 1,
       claveConcepto: TaxConcept.PREDIAL_URBANO,
       anioFiscal: anioActual,
-      baseCalculo: undefined,
+      baseCalculo: this.predio().valorCatastral,
       parametrosExtra: undefined,
     };
     this.calculoService.calcularPredial(payload);
@@ -95,5 +103,9 @@ export class PredioDetail {
 
   goBack(): void {
     this.router.navigate(['/catastro']);
+  }
+
+  ngOnDestroy(): void {
+    this.calculoService.resetCalculo();
   }
 }

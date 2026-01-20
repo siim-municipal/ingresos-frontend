@@ -15,7 +15,7 @@ export interface ContratoAguaRequest {
   predioId: string;
   tipoToma: TipoToma;
   esServicioMedido: boolean;
-  numeroSerieMedidor?: string; // Obligatorio si esServicioMedido = true
+  numeroMedidor?: string; // Obligatorio si esServicioMedido = true
   lecturaInicial?: number;
   observaciones?: string;
 }

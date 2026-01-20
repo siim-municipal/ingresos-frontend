@@ -31,7 +31,7 @@ import { FeedbackService } from '@gob-ui/shared/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetalleAdeudo {
-  // --- INJECTIONS ---
+  // INJECTIONS
   private contribuyenteService = inject(ContribuyenteApiService);
   private calculoService = inject(CalculoService);
   private shoppingStore = inject(ShoppingBagStore);
@@ -40,7 +40,7 @@ export class DetalleAdeudo {
   ownerId = signal<string>('');
   loadingOwner = signal<boolean>(false);
 
-  // --- SIGNALS ---
+  // SIGNALS
   // Consumimos los estados reactivos del servicio
   data = this.calculoService.estadoCuenta;
   loading = this.calculoService.isLoading;
@@ -56,13 +56,11 @@ export class DetalleAdeudo {
     });
   }
 
-  // --- ACTIONS ---
+  // ACTIONS
   agregarAlCarrito(): void {
     const cuenta = this.data();
     const contribuyenteId = this.ownerId();
     const uuidPredio = this.predioId();
-
-    console.log('UUID a guardar en carrito:', uuidPredio);
 
     if (cuenta && uuidPredio) {
       const itemParaCarrito: CartItemInput = {
@@ -73,7 +71,10 @@ export class DetalleAdeudo {
 
       this.shoppingStore.addItem(itemParaCarrito);
     } else {
-      console.error('ERROR CRÍTICO: No tengo el UUID del predio');
+      this.feedback.error(
+        'Error Critico',
+        'No contamos con el identificador unico',
+      );
     }
   }
 
@@ -83,7 +84,6 @@ export class DetalleAdeudo {
     this.contribuyenteService.getPropietariosPorPredio(predioId).subscribe({
       next: (props) => {
         if (!props || props.length === 0) {
-          console.warn('Este predio no tiene propietarios registrados.');
           this.feedback.warning(
             'Predio sin dueño',
             'Debe asignar un propietario antes de cobrar.',
@@ -113,7 +113,6 @@ export class DetalleAdeudo {
 
   /**
    * Helper para extraer metadatos numéricos de forma segura para el template.
-   * Evita el error TS2769 con el CurrencyPipe.
    */
   asNumber(val: string | number | object | undefined): number {
     if (typeof val === 'number') return val;

@@ -2,6 +2,8 @@ export * from './lib/models/contribuyente.dto';
 
 export * from './lib/models/contribuyente.model';
 
+export * from './lib/interfaces/contribuyente.predio.interface';
+
 export * from './lib/services/contribuyente-api.service';
 
 export * from './lib/state/contribuyente.store';

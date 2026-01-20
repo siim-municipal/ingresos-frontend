@@ -8,7 +8,7 @@ export interface Predio {
   tipoPredio: TipoPredio;
   usoSuelo?: string;
   valorCatastral?: number;
-  propietarioPrincipal?: string;
+  propietario?: string;
 
   areaTerrenoM2?: number;
   areaConstruccionM2?: number;

@@ -138,7 +138,7 @@
 
           <p class="text-sm text-slate-500 mb-6">
             Seleccione el periodo a liquidar. Esta acción consultará el motor de
-            reglas fiscales (`ms-calculos`).
+            reglas fiscales
           </p>
 
           <div class="flex flex-col gap-4">
@@ -148,7 +148,7 @@
               (click)="ejecutarSimulacion()"
             >
               <mat-icon>play_circle</mat-icon>
-              Simular Respuesta Backend
+              Generar simulacion de cobro
             </button>
           </div>
         </div>
@@ -159,9 +159,7 @@
       </div>
     </mat-tab>
   </mat-tab-group>
-  <div class="max-w-7xl mx-auto p-6 bg-white min-h-screen">
-    <mat-tab-group> </mat-tab-group>
-
+  <div class="mt-8 border-t pt-4">
     <lib-audit-info [data]="predio()" />
   </div>
 </div>

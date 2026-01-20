@@ -25,9 +25,7 @@
         <p class="text-xl font-bold text-slate-800">
           {{ predioSeleccionado()?.claveCatastral }}
         </p>
-        <p class="text-slate-600">
-          {{ predioSeleccionado()?.propietarioPrincipal }}
-        </p>
+        <p class="text-slate-600">{{ predioSeleccionado()?.propietario }}</p>
       </div>
       <button mat-stroked-button color="primary" (click)="limpiarSeleccion()">
         <mat-icon>change_circle</mat-icon> Cambiar Predio
@@ -92,7 +90,7 @@
         </mat-form-field>
 
         <div class="col-span-1 md:col-span-2 flex justify-end gap-4 mt-4">
-          <button mat-button type="button" routerLink="/agua/contratos">
+          <button mat-button type="button" (click)="limpiarSeleccion()">
             Cancelar
           </button>
           <button

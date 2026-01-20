@@ -5,4 +5,6 @@ export interface PropiedadPredio {
   apellidoMaterno?: string;
   rfc?: string;
   esResponsablePago: boolean;
+  tipoRelacion?: 'PROPIETARIO' | 'POSEEDOR';
+  porcentajePropiedad?: number;
 }

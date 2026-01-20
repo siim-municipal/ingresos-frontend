@@ -62,7 +62,7 @@ export class CalculoService {
           let tipoError = CalculoErrorType.GENERICO;
           let mensaje = 'Ocurrió un error inesperado al calcular.';
 
-          // 🛡️ Manejo específico del 422 (Falta Valuación)
+          // Manejo específico del 422 (Falta Valuación)
           if (err.status === 422) {
             tipoError = CalculoErrorType.REQUIERE_VALUACION;
             mensaje = 'El predio carece de valores catastrales vigentes.';
@@ -137,6 +137,15 @@ export class CalculoService {
       fechaLimite: new Date(new Date().getFullYear(), 11, 31),
       metadatos: dto.metadatos, // Pasamos los metadatos
     };
+  }
+
+  resetCalculo(): void {
+    this._state.set({
+      status: 'IDLE',
+      data: null,
+      errorMessage: null,
+      errorType: null,
+    });
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

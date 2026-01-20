@@ -4,7 +4,7 @@
     matInput
     [formControl]="searchControl"
     [matAutocomplete]="auto"
-    placeholder="Ej. URB-001 o Juan Perez"
+    placeholder="Ej. URB-001"
   />
 
   <div matSuffix class="flex items-center">
@@ -24,7 +24,9 @@
     <mat-option [value]="predio">
       <div class="flex flex-col py-1">
         <span class="font-bold text-sm">{{ predio.claveCatastral }}</span>
-        <span class="text-xs text-slate-500">{{ 'Sin Propietario' }}</span>
+        <span class="text-xs text-slate-500"
+          >{{ predio.propietario || 'SIN PROPIETARIO' }}</span
+        >
       </div>
     </mat-option>
     } @if (resultados().length === 0 && searchControl.value && !isLoading()) {
