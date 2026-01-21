@@ -1,0 +1,174 @@
+<div class="max-w-7xl mx-auto p-6 min-h-screen bg-slate-50">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">
+        Gestión de Contratos de Agua
+      </h1>
+      <p class="text-slate-500">
+        Administre las tomas, medidores y estatus del servicio.
+      </p>
+    </div>
+
+    <button mat-flat-button color="primary" routerLink="/agua/contratos/nuevo">
+      <mat-icon>add</mat-icon> Nuevo Contrato
+    </button>
+  </div>
+
+  <div
+    class="bg-white rounded-lg shadow overflow-hidden border border-slate-200"
+  >
+    @if (isLoading()) {
+    <div class="p-12 flex justify-center items-center">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    } @else {
+
+    <table mat-table [dataSource]="dataSource()" class="w-full">
+      <ng-container matColumnDef="clave">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-slate-50 font-bold text-slate-600"
+        >
+          Predio
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="flex flex-col py-2">
+            <span class="font-bold text-slate-700"
+              >{{ row.claveCatastral }}</span
+            >
+            <span class="text-xs text-slate-400 font-mono"
+              >{{ row.predioId | slice:0:8 }}...</span
+            >
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="propietario">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-slate-50 font-bold text-slate-600"
+        >
+          Propietario
+        </th>
+        <td mat-cell *matCellDef="let row" class="text-slate-600">
+          {{ row.propietario || 'SIN PROPIETARIO' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="servicio">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-slate-50 font-bold text-slate-600"
+        >
+          Servicio
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="flex flex-col text-sm">
+            <span class="font-medium">{{ row.tipoToma }}</span>
+            @if (row.numeroMedidor) {
+            <span class="text-xs text-blue-600 flex items-center gap-1">
+              <mat-icon class="text-[10px] h-3 w-3">speed</mat-icon> {{
+              row.numeroMedidor }}
+            </span>
+            } @else {
+            <span class="text-xs text-slate-400">Cuota Fija (Sin Medidor)</span>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estatus">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-slate-50 font-bold text-slate-600"
+        >
+          Estatus
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip-set>
+            <mat-chip [color]="getStatusColor(row.estatus)" selected>
+              {{ row.estatus }}
+            </mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="bg-slate-50 text-right"
+        ></th>
+        <td mat-cell *matCellDef="let row" class="text-right">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Opciones"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <button
+              mat-menu-item
+              routerLink="/agua/contratos/detalle/{{row.id}}"
+            >
+              <mat-icon>visibility</mat-icon>
+              <span>Ver Detalle</span>
+            </button>
+
+            @if (row.estatus === Estatus.ACTIVO) {
+            <button
+              mat-menu-item
+              (click)="cambiarEstatus(row, Estatus.SUSPENDIDO)"
+            >
+              <mat-icon class="text-orange-500">pause_circle</mat-icon>
+              <span>Suspender Servicio</span>
+            </button>
+            <button
+              mat-menu-item
+              (click)="cambiarEstatus(row, Estatus.CANCELADO)"
+            >
+              <mat-icon class="text-red-600">cancel</mat-icon>
+              <span>Cancelar Contrato</span>
+            </button>
+            } @if (row.estatus === Estatus.SUSPENDIDO) {
+            <button mat-menu-item (click)="cambiarEstatus(row, Estatus.ACTIVO)">
+              <mat-icon class="text-green-600">play_circle</mat-icon>
+              <span>Reactivar Servicio</span>
+            </button>
+            <button
+              mat-menu-item
+              (click)="cambiarEstatus(row, Estatus.CANCELADO)"
+            >
+              <mat-icon class="text-red-600">cancel</mat-icon>
+              <span>Cancelar Contrato</span>
+            </button>
+            }
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="hover:bg-slate-50 transition-colors"
+      ></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td
+          class="mat-cell text-center py-8 text-slate-500"
+          [attr.colspan]="displayedColumns.length"
+        >
+          No se encontraron contratos registrados.
+        </td>
+      </tr>
+    </table>
+    }
+  </div>
+</div>

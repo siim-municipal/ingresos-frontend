@@ -19,3 +19,14 @@ export interface ContratoAguaRequest {
   lecturaInicial?: number;
   observaciones?: string;
 }
+
+export interface ContratoResumenDTO {
+  id: string;
+  predioId: string;
+  claveCatastral: string; // Dato proyectado del predio
+  propietario: string; // Dato proyectado del predio
+  numeroMedidor?: string;
+  tipoToma: string;
+  estatus: EstatusContrato;
+  ultimaLectura?: number;
+}

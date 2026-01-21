@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CobroResult } from '../ui/cobro-modal/cobro-modal';
-import { ShoppingBagStore } from '../stores/shopping-bag.store';
+import { ShoppingBagStore } from '@gob-ui/sales-data';
 import { FeedbackService } from '@gob-ui/shared/services';
 import {
   IngresoResponse,

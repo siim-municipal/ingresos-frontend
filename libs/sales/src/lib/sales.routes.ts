@@ -13,10 +13,10 @@ export const salesRoutes: Route[] = [
       import('./ui/corte-caja/corte-caja').then((m) => m.CorteCaja),
     title: 'Cierre de Turno y Arqueo',
   },
-  // {
-  //   path: '',
-  //   loadComponent: () =>
-  //     import('./ui/caja-dashboard/caja-dashboard').then(m => m.CajaDashboardComponent),
-  //   title: 'Punto de Venta'
-  // }
+  {
+    path: '',
+    loadComponent: () =>
+      import('./ui/caja-dashboard/caja-dashboard').then((m) => m.CajaDashboard),
+    title: 'Punto de Venta',
+  },
 ];

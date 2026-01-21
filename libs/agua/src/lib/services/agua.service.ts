@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import {
   ContratoAguaRequest,
+  ContratoResumenDTO,
   EstatusContrato,
 } from '../models/contrato.models';
 import { API_BASE_URL } from '@gob-ui/shared/services';
@@ -15,6 +16,11 @@ export class AguaService {
 
   crearContrato(request: ContratoAguaRequest): Observable<void> {
     return this.http.post<void>(this.apiUrl, request);
+  }
+
+  listarContratos(): Observable<ContratoResumenDTO[]> {
+    // Ajusta la ruta a tu endpoint real de listado
+    return this.http.get<ContratoResumenDTO[]>(`${this.apiUrl}`);
   }
 
   // Método para futura implementación de suspensión

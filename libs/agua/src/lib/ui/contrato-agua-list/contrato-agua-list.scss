@@ -1,0 +1,16 @@
+/* Puedes personalizar los colores de Material chips si no usas el theme default */
+.mat-mdc-standard-chip.mat-accent {
+  --mdc-chip-elevated-container-color: #dcfce7; /* Verde claro */
+  --mdc-chip-label-text-color: #166534;
+}
+
+.mat-mdc-standard-chip.mat-warn {
+  --mdc-chip-elevated-container-color: #ffedd5; /* Naranja claro */
+  --mdc-chip-label-text-color: #9a3412;
+}
+
+.mat-mdc-standard-chip.mat-primary {
+  /* Para cancelado, usaremos un gris o rojo apagado */
+  --mdc-chip-elevated-container-color: #f1f5f9;
+  --mdc-chip-label-text-color: #475569;
+}

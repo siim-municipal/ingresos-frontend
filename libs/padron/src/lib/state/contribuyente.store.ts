@@ -95,7 +95,7 @@ export class ContribuyenteStore {
           }));
         },
         error: (err: HttpErrorResponse) => {
-          const msg = `No se pudo cargar el padrón: ${err}`;
+          const msg = `No se pudo cargar el padrón: ${err.error}`;
           this.state.update((s) => ({
             ...s,
             error: msg,

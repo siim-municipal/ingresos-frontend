@@ -1,15 +1,8 @@
-import { Component, input, signal, OnInit } from '@angular/core';
+import { Component, input, signal, OnInit, inject } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-
-export interface ReciboPago {
-  folio: string;
-  anioFiscal: number;
-  fechaPago: Date;
-  importe: number;
-  estatus: 'PAGADO' | 'CANCELADO';
-}
+import { ReciboPago, TesoreriaApiService } from '@gob-ui/sales';
 
 @Component({
   selector: 'lib-predio-historial',
@@ -25,7 +18,7 @@ export interface ReciboPago {
   styleUrl: './predio-historial.scss',
 })
 export class PredioHistorial implements OnInit {
-  // TODO implementar y llamar el service de historial de pagos
+  private tesoreriaService = inject(TesoreriaApiService);
   predioId = input.required<string>();
 
   pagos = signal<ReciboPago[]>([]);
@@ -33,32 +26,16 @@ export class PredioHistorial implements OnInit {
   displayedColumns = ['anio', 'folio', 'fecha', 'importe', 'estatus'];
 
   ngOnInit(): void {
-    // Simulación de delay de red (Fetch de 1.5 segundos)
-    setTimeout(() => {
-      this.pagos.set([
-        {
-          folio: 'REC-2024-00589',
-          anioFiscal: 2024,
-          fechaPago: new Date('2024-01-15'),
-          importe: 1250.0,
-          estatus: 'PAGADO',
-        },
-        {
-          folio: 'REC-2023-11200',
-          anioFiscal: 2023,
-          fechaPago: new Date('2023-02-20'),
-          importe: 1100.5,
-          estatus: 'PAGADO',
-        },
-        {
-          folio: 'REC-2022-05444',
-          anioFiscal: 2022,
-          fechaPago: new Date('2022-03-10'),
-          importe: 980.0,
-          estatus: 'PAGADO',
-        },
-      ]);
-      this.loading.set(false);
-    }, 1500);
+    // Reemplazar el setTimeout por:
+    this.tesoreriaService.getHistorialPagos(this.predioId()).subscribe({
+      next: (data) => {
+        this.pagos.set(data);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading.set(false);
+      },
+    });
   }
 }

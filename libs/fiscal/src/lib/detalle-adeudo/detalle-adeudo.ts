@@ -11,10 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { CalculoService } from '../services/calculo.service';
-import { ShoppingBagStore, CartItemInput } from '@gob-ui/sales';
 import { RouterModule } from '@angular/router';
 import { ContribuyenteApiService } from '@gob-ui/padron';
 import { FeedbackService } from '@gob-ui/shared/services';
+import { CartItemInput, ShoppingBagStore } from '@gob-ui/sales-data';
 
 @Component({
   selector: 'lib-detalle-adeudo',

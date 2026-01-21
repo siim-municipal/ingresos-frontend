@@ -12,8 +12,8 @@ export const aguaRoutes: Route[] = [
   {
     path: '',
     loadComponent: () =>
-      import('./ui/contrato-agua-form/contrato-agua-form').then(
-        (m) => m.ContratoAguaForm,
+      import('./ui/contrato-agua-list/contrato-agua-list').then(
+        (m) => m.ContratoAguaList,
       ),
     title: 'Alta de Contrato de Agua',
   },
