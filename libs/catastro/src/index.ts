@@ -1,9 +1,9 @@
-export * from './lib/models/predio.model';
-
 export * from './lib/predio-list/predio-list';
 
-export * from './lib/services/predio.service';
+export * from './lib/components/predio-historial/predio-historial';
 
-export * from './lib/ui/predio-search/predio-search';
+export * from './lib/components/predio-propietarios/predio-propietarios';
+
+export * from './lib/components/predio-ubicacion/predio-ubicacion';
 
 export * from './lib/catastro.routes';

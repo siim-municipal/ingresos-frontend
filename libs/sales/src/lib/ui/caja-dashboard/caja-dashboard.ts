@@ -13,11 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Tus Librerías
 import { FeedbackService } from '@gob-ui/shared/services';
 import { ShoppingBagStore } from '@gob-ui/sales-data';
-// import { Predio } from '@gob-ui/catastro';
-
-export interface Predio {
-  id: number;
-}
+import { Predio, PredioSearch } from '@gob-ui/catastro-ui';
 
 @Component({
   selector: 'lib-caja-dashboard',
@@ -33,7 +29,7 @@ export interface Predio {
     MatTooltipModule,
     CurrencyPipe,
     DatePipe,
-    // PredioSearch,
+    PredioSearch,
   ],
   templateUrl: './caja-dashboard.html',
   styleUrl: './caja-dashboard.scss',
@@ -66,7 +62,6 @@ export class CajaDashboard {
 
   onPredioSelected(predio: Predio): void {
     // Cuando encuentran un predio, vamos al detalle para calcular adeudos
-    // Pasamos ?tab=simulacion para ir directo al cobro
     this.router.navigate(['/catastro/predio', predio.id], {
       queryParams: { tab: 'simulacion' },
     });

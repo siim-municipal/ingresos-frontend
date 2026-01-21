@@ -105,11 +105,11 @@ export class ContratoAguaList implements OnInit {
   getStatusColor(estatus: EstatusContrato): string {
     switch (estatus) {
       case EstatusContrato.ACTIVO:
-        return 'accent'; // Verde/Rosa según tema (o clase custom)
+        return 'accent';
       case EstatusContrato.SUSPENDIDO:
-        return 'warn'; // Naranja/Rojo
+        return 'warn';
       case EstatusContrato.CANCELADO:
-        return 'primary'; // Gris/Azul (depende del theme, ver SCSS)
+        return 'primary';
       default:
         return '';
     }

@@ -21,6 +21,7 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { environment } from '../enviroments/enviroment.development';
 import { API_BASE_URL } from '@gob-ui/shared/services';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       const auth = inject(AuthService);
       return auth.initializeLogin();
     }),
+    provideCharts(withDefaultRegisterables()),
     { provide: OAuthStorage, useClass: PrefixOAuthStorage },
     { provide: API_BASE_URL, useValue: environment.apiUrl },
   ],

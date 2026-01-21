@@ -7,3 +7,7 @@ export * from './lib/services/agua.service';
 export * from './lib/ui/contrato-agua-form/contrato-agua-form';
 
 export * from './lib/ui/contrato-agua-list/contrato-agua-list';
+
+export * from './lib/ui/historial-consumo/historial-consumo';
+
+export * from './lib/ui/captura-lecturas/captura-lecturas';

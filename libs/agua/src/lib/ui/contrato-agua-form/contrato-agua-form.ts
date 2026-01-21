@@ -22,7 +22,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { FeedbackService } from '@gob-ui/shared/services';
 import { AguaService } from '../../services/agua.service';
 import { TipoToma, ContratoAguaRequest } from '../../models/contrato.models';
-import { Predio, PredioSearch } from '@gob-ui/catastro';
+import { Predio, PredioSearch } from '@gob-ui/catastro-ui';
 
 // Definición estricta del formulario
 interface ContratoForm {

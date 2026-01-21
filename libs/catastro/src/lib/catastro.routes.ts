@@ -1,8 +1,7 @@
 import { ResolveFn, Router, Routes } from '@angular/router';
 import { PredioList } from './predio-list/predio-list';
 import { inject } from '@angular/core';
-import { PredioService } from './services/predio.service';
-import { Predio } from './models/predio.model';
+import { Predio, PredioService } from '@gob-ui/catastro-ui';
 import { catchError, EMPTY } from 'rxjs';
 import { PredioDetail } from './predio-detail/predio-detail';
 

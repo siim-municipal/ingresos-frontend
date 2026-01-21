@@ -1,0 +1,69 @@
+<div class="container">
+  <header class="header">
+    <h1>Captura Masiva de Lecturas</h1>
+    <div class="actions">
+      <span class="stats">Registros: {{ service.rows().length }}</span>
+      <button
+        class="btn-primary"
+        (click)="procesar()"
+        [disabled]="service.loading() || hayErrores()"
+      >
+        {{ service.loading() ? 'Procesando...' : 'Procesar Lote' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="grid-header">
+    <div class="col">Dirección</div>
+    <div class="col">Medidor</div>
+    <div class="col text-right">Anterior</div>
+    <div class="col text-center">Actual</div>
+    <div class="col text-right">Consumo</div>
+    <div class="col">Estado</div>
+  </div>
+
+  <cdk-virtual-scroll-viewport
+    itemSize="48"
+    class="viewport"
+    minBufferPx="200"
+    maxBufferPx="400"
+  >
+    @for (row of service.rows(); track row.id; let i = $index) {
+    <div class="grid-row" [class.row-alert]="row.esAnomaliaAlta()">
+      <div class="col truncate" [title]="row.direccion">
+        {{ row.direccion }}
+      </div>
+      <div class="col">{{ row.serie }}</div>
+      <div class="col text-right">{{ row.anterior }}</div>
+
+      <div class="col center-input">
+        <input
+          type="number"
+          [id]="'reading-input-' + i"
+          [ngModel]="row.actual()"
+          (ngModelChange)="row.actual.set($event)"
+          (keydown)="handleKey($event, i)"
+          [class.input-error]="row.esNegativo()"
+          placeholder="0"
+          class="excel-input"
+        />
+      </div>
+
+      <div
+        class="col text-right font-bold"
+        [class.text-danger]="row.esNegativo()"
+      >
+        {{ row.consumo() !== null ? (row.consumo() | number) : '-' }} m³
+      </div>
+
+      <div class="col status-col">
+        @if (row.esAnomaliaAlta()) {
+        <span class="badge warning">Alto Consumo</span>
+        } @if (row.esNegativo()) {
+        <span class="badge error">Negativo</span>
+        }
+      </div>
+    </div>
+    }
+  </cdk-virtual-scroll-viewport>
+</div>

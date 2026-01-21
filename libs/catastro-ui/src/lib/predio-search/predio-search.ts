@@ -16,9 +16,8 @@ import {
   finalize,
 } from 'rxjs/operators';
 import { of } from 'rxjs';
-
-import { PredioService } from '../../services/predio.service';
-import { Predio } from '../../models/predio.model';
+import { PredioService } from '../services/predio.service';
+import { Predio } from '../models/predio.model';
 
 @Component({
   selector: 'lib-predio-search',

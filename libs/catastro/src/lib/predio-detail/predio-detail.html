@@ -127,6 +127,13 @@
       </div>
       }
     </mat-tab>
+
+    <mat-tab label="Gráfica de Consumo">
+      <div class="p-6 bg-slate-50 min-h-[500px]">
+        <lib-historial-consumo [contratoId]="predio().id" />
+      </div>
+    </mat-tab>
+
     <mat-tab label="Simulador de Cobro">
       <div
         class="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start animate-fade-in"

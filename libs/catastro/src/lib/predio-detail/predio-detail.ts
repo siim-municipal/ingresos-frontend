@@ -12,14 +12,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatTabsModule, MatTabChangeEvent } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Predio } from '../models/predio.model';
-import { PredioPropietarios } from './components/predio-propietarios/predio-propietarios';
-import { PredioHistorial } from './components/predio-historial/predio-historial';
-import { PredioUbicacion } from './components/predio-ubicacion/predio-ubicacion';
+
 import { AuditInfo } from '@gob-ui/components';
 import { CalculoService, SolicitudCalculo } from '@gob-ui/fiscal';
 import { DetalleAdeudo } from '@gob-ui/fiscal';
 import { TaxConcept } from '@gob-ui/fiscal';
+import { HistorialConsumo } from '@gob-ui/agua';
+import { Predio } from '@gob-ui/catastro-ui';
+import { PredioPropietarios } from '../components/predio-propietarios/predio-propietarios';
+import { PredioHistorial } from '../components/predio-historial/predio-historial';
+import { PredioUbicacion } from '../components/predio-ubicacion/predio-ubicacion';
 
 @Component({
   selector: 'lib-predio-detail',
@@ -31,11 +33,12 @@ import { TaxConcept } from '@gob-ui/fiscal';
     MatIconModule,
     CurrencyPipe,
     DecimalPipe,
+    AuditInfo,
+    DetalleAdeudo,
+    HistorialConsumo,
     PredioPropietarios,
     PredioHistorial,
     PredioUbicacion,
-    AuditInfo,
-    DetalleAdeudo,
   ],
   templateUrl: './predio-detail.html',
   styleUrl: './predio-detail.scss',
@@ -53,6 +56,7 @@ export class PredioDetail implements OnDestroy {
     'propietarios',
     'historial',
     'ubicacion',
+    'consumo',
     'simulacion',
   ];
   selectedTabIndex = signal(0);

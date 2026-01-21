@@ -4,12 +4,12 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
+    "target": "es2022",
+    "module": "es2022",
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
@@ -23,7 +23,8 @@
       "@gob-ui/fiscal": ["libs/fiscal/src/index.ts"],
       "@gob-ui/sales": ["libs/sales/src/index.ts"],
       "@gob-ui/agua": ["libs/agua/src/index.ts"],
-      "@gob-ui/sales-data": ["libs/sales-data/src/index.ts"]
+      "@gob-ui/sales-data": ["libs/sales-data/src/index.ts"],
+      "@gob-ui/catastro-ui": ["libs/catastro-ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
