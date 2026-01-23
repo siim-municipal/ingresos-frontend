@@ -8,8 +8,7 @@ import { FeedbackService } from '@gob-ui/shared/services';
 
 interface CustomJwtPayload {
   sub: string;
-  municipio_id: string; // ✅ El campo que mencionaste
-  // ... otros claims (roles, exp, iat)
+  municipio_id: string;
 }
 
 @Injectable({

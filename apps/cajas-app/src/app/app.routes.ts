@@ -4,6 +4,8 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { LoginComponent } from './features/auth/login';
 import { authGuard } from './core/guard/auth.guard';
 import { roleGuard } from './core/guard/role.guard';
+import { DashboardComponent } from './features/dashboards/dashboard';
+import { salesRoutes } from '@gob-ui/sales';
 
 export const appRoutes: Route[] = [
   // RUTAS PÚBLICAS (Auth)
@@ -25,11 +27,7 @@ export const appRoutes: Route[] = [
       // A. Dashboard (Carga inmediata o ligera)
       {
         path: 'dashboard',
-        // Opción A: Si creaste el componente en 'apps/cajas-app/src/app/features/dashboard'
-        loadComponent: () =>
-          import('./features/dashboards/dashboard').then(
-            (m) => m.DashboardComponent,
-          ),
+        component: DashboardComponent,
         title: 'Tablero Principal - SIIM',
       },
 
@@ -37,27 +35,27 @@ export const appRoutes: Route[] = [
       {
         path: 'padron',
         canActivate: [roleGuard],
-        data: { roles: ['TESORERO', 'CAJERO'] },
+        data: { roles: ['TESORERO', 'ADMIN'] },
         loadChildren: () =>
           import('@gob-ui/padron').then((m) => m.padronRoutes),
       },
       {
         path: 'catastro',
         canActivate: [roleGuard],
-        data: { roles: ['TESORERO', 'CAJERO'] },
+        data: { roles: ['TESORERO', 'ADMIN'] },
         loadChildren: () =>
           import('@gob-ui/catastro').then((m) => m.catastroRoutes),
       },
       {
         path: 'caja',
         canActivate: [roleGuard],
-        data: { roles: ['TESORERO', 'CAJERO'] },
-        loadChildren: () => import('@gob-ui/sales').then((m) => m.salesRoutes),
+        data: { roles: ['ADMIN', 'CAJERO'] },
+        children: salesRoutes,
       },
       {
         path: 'agua',
         canActivate: [roleGuard],
-        data: { roles: ['TESORERO', 'CAJERO'] },
+        data: { roles: ['TESORERO', 'ADMIN'] },
         loadChildren: () => import('@gob-ui/agua').then((m) => m.aguaRoutes),
       },
 
